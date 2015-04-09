@@ -1,5 +1,7 @@
 module Defender
   class Map
+    GRASS_TILE = 'media/images/grass.png'
+
     def initialize(window)
       @window = window
       @height = 14
@@ -15,8 +17,7 @@ module Defender
           y = row * tile_size
           z = ZOrder::Background
 
-          image = Gosu::Image.new(@window, "media/images/grass.png", false)
-          image.draw(x, y, z)
+          get_tile.draw(x, y, z)
         end
       end
     end
@@ -24,7 +25,11 @@ module Defender
     private
 
       def tile_size
-        @tile_size ||= Gosu::Image.new(@window, "media/images/grass.png", false).width
+        @tile_size ||= get_tile.width
+      end
+
+      def get_tile
+        Gosu::Image.new(@window, GRASS_TILE, false)
       end
   end
 end
