@@ -8,6 +8,8 @@ module Defender
 
     SPEED = 1
 
+    attr_reader :x, :y
+
     def initialize(animation, x, y)
       @animation = animation
       @x = x

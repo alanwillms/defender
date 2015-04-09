@@ -12,7 +12,7 @@ module Defender
 
       @monster_anim = Gosu::Image::load_tiles(self, "media/images/monster_sprite.png", 32, 32, false)
       @monsters = Array.new
-      monster = Monster.new(@monster_anim, @map.get_x_for_column(1), @map.get_y_for_row(0))
+      monster = Monster.new(@monster_anim, @map.get_x_for_column(0), @map.get_y_for_row(0))
       monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))
       @monsters.push(monster)
     end
@@ -21,7 +21,10 @@ module Defender
     # game main logic
     # move objects, handle collisions, etc.
     def update
-      @monsters.each { |monster| monster.move }
+      @monsters.each do |monster|
+        @map.set_next_destination_for(monster)
+        monster.move
+      end
     end
 
     # called after update
@@ -29,7 +32,9 @@ module Defender
     # no logic whatsoever
     def draw
       @map.draw
-      @monsters.each { |monster| monster.draw }
+      @monsters.each do |monster|
+        monster.draw
+      end
     end
 
     # Show system cursor

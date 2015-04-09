@@ -10,6 +10,10 @@ module Defender
     PATH_BLOCKED = '#'
     PATH_RIGHT = '+'
     PATH_WRONG = 'x'
+    PATH_GO_UP = '↑'
+    PATH_GO_RIGHT = '→'
+    PATH_GO_DOWN = '↓'
+    PATH_GO_LEFT = '←'
 
     def initialize(window)
       @window = window
@@ -35,6 +39,32 @@ module Defender
 
     def rows
       @rows ||= @window.height.to_i / tile_size.to_i
+    end
+
+    def set_next_destination_for(monster)
+      # Current position
+      monster_row = monster.y.to_i / tile_size.to_i
+      monster_column = monster.x.to_i / tile_size.to_i
+
+      # Maze
+      next_step = maze_solution[monster_row][monster_column]
+      next_row = monster_row
+      next_column = monster_column
+
+      if next_step == PATH_GO_UP
+        next_row -= 1
+      elsif next_step == PATH_GO_DOWN
+        next_row += 1
+      elsif next_step == PATH_GO_LEFT
+        next_column -= 1
+      elsif next_step == PATH_GO_RIGHT
+        next_column += 1
+      end
+
+      # Next position
+      x = get_x_for_column(next_column)
+      y = get_y_for_row(next_row)
+      monster.set_destination(x, y)
     end
 
     private
@@ -66,21 +96,25 @@ module Defender
 
         # If north path is right
         if find_path(row - 1, column)
+          @maze_path[row][column] = PATH_GO_UP
           return true
         end
 
         # If east path is right
         if find_path(row, column + 1)
+          @maze_path[row][column] = PATH_GO_RIGHT
           return true
         end
 
-        # If sotuh path is right
+        # If south path is right
         if find_path(row + 1, column)
+          @maze_path[row][column] = PATH_GO_DOWN
           return true
         end
 
         # If west path is right
         if find_path(row, column - 1)
+          @maze_path[row][column] = PATH_GO_LEFT
           return true
         end
 
@@ -101,7 +135,6 @@ module Defender
             @maze[row].push(PATH_OPEN)
           end
         end
-        @maze[0][0] = PATH_START
         @maze[rows - 1][columns - 1] = PATH_END
         @maze
       end
