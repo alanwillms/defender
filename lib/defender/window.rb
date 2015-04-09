@@ -1,7 +1,7 @@
 module Defender
   class Window < Gosu::Window
     def initialize
-      # width, height, fullscreen
+      # width, height, fullscreen, update_interval (16.666666)
       super(960, 540, false)
       self.caption = 'Defender'
 
@@ -9,6 +9,10 @@ module Defender
 
       @music = Gosu::Sample.new(self, "media/audio/music/digital_native.ogg")
       @music.play
+
+      @monster_anim = Gosu::Image::load_tiles(self, "media/images/monster_sprite.png", 32, 32, false)
+      @monsters = Array.new
+      @monsters.push(Monster.new(@monster_anim, @map.get_x_for_column(1), @map.get_y_for_row(0)))
     end
 
     # called 60 times per second
@@ -22,6 +26,7 @@ module Defender
     # no logic whatsoever
     def draw
       @map.draw
+      @monsters.each { |monster| monster.draw }
     end
 
     # Show system cursor

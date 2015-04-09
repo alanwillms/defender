@@ -14,13 +14,21 @@ module Defender
       draw_defending_city
     end
 
+    def get_x_for_column(column)
+      column * tile_size
+    end
+
+    def get_y_for_row(row)
+      row * tile_size
+    end
+
     private
 
       def draw_floor
         for column in 0...columns do
           for row in 0...rows do
-            x = column * tile_size
-            y = row * tile_size
+            x = get_x_for_column(column)
+            y = get_y_for_row(row)
             z = ZOrder::Background
 
             get_tile.draw(x, y, z)
@@ -30,16 +38,16 @@ module Defender
 
       def draw_monster_spawner
         tile = Gosu::Image.new(@window, MONSTER_SPAWNER_IMAGE, false)
-        x = 0
-        y = 0
+        x = get_x_for_column(0)
+        y = get_y_for_row(0)
         z = ZOrder::Building
         tile.draw(x, y, z)
       end
 
       def draw_defending_city
         tile = Gosu::Image.new(@window, DEFENDING_CITY_IMAGE, false)
-        x = (columns - 1) * tile_size
-        y = (rows - 1) * tile_size
+        x = get_x_for_column(columns - 1)
+        y = get_y_for_row(rows - 1)
         z = ZOrder::Building
         tile.draw(x, y, z)
       end
@@ -49,7 +57,7 @@ module Defender
       end
 
       def get_tile
-        Gosu::Image.new(@window, GRASS_IMAGE, false)
+        @grass_tile ||= Gosu::Image.new(@window, GRASS_IMAGE, false)
       end
 
       def columns
