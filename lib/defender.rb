@@ -1,13 +1,11 @@
 require 'gosu'
 require 'defender/zorder'
-require 'defender/helper'
+require 'defender/helper/audio'
+require 'defender/helper/sprite'
 require 'defender/maze'
 require 'defender/monster'
 require 'defender/monster_spawner'
-# require 'defender/monster_journey'
 require 'defender/window'
 require 'defender/map'
-require 'defender/screen'
-
-module Defender
-end
+require 'defender/screen/game'
+require 'defender/screen/game_over'
