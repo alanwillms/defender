@@ -1,15 +1,19 @@
 class Map
-  attr_reader :max_width, :max_height, :maze
+  attr_reader :max_width, :max_height, :maze, :rows, :columns, :last_row, :last_column
 
   def initialize(max_width, max_height)
     @max_width = max_width
     @max_height = max_height
-    @maze = Maze.new(rows, columns)
+    @columns = @max_width.to_i / MapHelper.tile_size
+    @rows = @max_height.to_i / MapHelper.tile_size
+    @last_column = @columns - 1
+    @last_row = @rows - 1
+    @maze = Maze.new(rows, @columns)
   end
 
   def draw
-    for column in 0...columns do
-      for row in 0...rows do
+    for column in 0...@columns do
+      for row in 0...@rows do
         x = MapHelper.get_x_for_column(column)
         y = MapHelper.get_y_for_row(row)
         z = ZOrder::Background
@@ -28,33 +32,17 @@ class Map
     end
   end
 
-  def columns
-    @columns ||= @max_width.to_i / MapHelper.tile_size
-  end
-
-  def rows
-    @rows ||= @max_height.to_i / MapHelper.tile_size
-  end
-
-  def last_column
-    columns - 1
-  end
-
-  def last_row
-    rows - 1
-  end
-
   def monster_at_defending_city?(monster)
     monster_row = MapHelper.get_row_for_y(monster.y)
     monster_column = MapHelper.get_column_for_x(monster.x)
-    monster_row == last_row and monster_column == last_column
+    monster_row == @last_row and monster_column == @last_column
   end
 
   def on_click(mouse_x, mouse_y)
     x1 = MapHelper.get_x_for_column(0)
-    x2 = MapHelper.get_x_for_column(last_column) + MapHelper.tile_size
+    x2 = MapHelper.get_x_for_column(@last_column) + MapHelper.tile_size
     y1 = MapHelper.get_y_for_row(0)
-    y2 = MapHelper.get_y_for_row(last_row) + MapHelper.tile_size
+    y2 = MapHelper.get_y_for_row(@last_row) + MapHelper.tile_size
     x_inside = mouse_x >= x1 and mouse_x <= x2
     y_inside = mouse_y >= y1 and mouse_y <= y2
 
@@ -63,7 +51,7 @@ class Map
       clicked_row = MapHelper.get_row_for_y(mouse_y)
 
       at_monster_spawner = (clicked_row == 0 and clicked_column == 0)
-      at_defending_city = (clicked_row == last_row and clicked_column == last_column)
+      at_defending_city = (clicked_row == @last_row and clicked_column == @last_column)
       at_existing_defense = (@maze.path[clicked_row][clicked_column] == Maze::PATH_BLOCKED)
       blocks_path = @maze.block_all_paths?(clicked_row, clicked_column)
 

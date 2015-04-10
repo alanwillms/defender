@@ -2,7 +2,7 @@ class DefendingCity
   attr_accessor :health_points
 
   def initialize(map)
-    @health_points = 10
+    @health_points = 100
     @map = map
   end
 
