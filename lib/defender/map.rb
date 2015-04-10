@@ -4,23 +4,13 @@ module Defender
     MONSTER_SPAWNER_IMAGE = 'media/images/monster_spawner.png'
     DEFENDING_CITY_IMAGE = 'media/images/defending_city.png'
 
-    PATH_START = 'S'
-    PATH_END = 'G'
-    PATH_OPEN = '.'
-    PATH_BLOCKED = '#'
-    PATH_RIGHT = '+'
-    PATH_WRONG = 'x'
-    PATH_GO_UP = '↑'
-    PATH_GO_RIGHT = '→'
-    PATH_GO_DOWN = '↓'
-    PATH_GO_LEFT = '←'
-
     attr_reader :max_width, :max_height
 
     def initialize(window, max_width, max_height)
       @window = window
       @max_width = max_width
       @max_height = max_height
+      @maze = Maze.new(rows, columns)
     end
 
     def draw
@@ -51,17 +41,17 @@ module Defender
       monster_column = monster.x.to_i / tile_size.to_i
 
       # Maze
-      next_step = maze_solution[monster_row][monster_column]
+      next_step = @maze.path[monster_row][monster_column]
       next_row = monster_row
       next_column = monster_column
 
-      if next_step == PATH_GO_UP
+      if next_step == Maze::PATH_GO_UP
         next_row -= 1
-      elsif next_step == PATH_GO_DOWN
+      elsif next_step == Maze::PATH_GO_DOWN
         next_row += 1
-      elsif next_step == PATH_GO_LEFT
+      elsif next_step == Maze::PATH_GO_LEFT
         next_column -= 1
-      elsif next_step == PATH_GO_RIGHT
+      elsif next_step == Maze::PATH_GO_RIGHT
         next_column += 1
       end
 
@@ -72,76 +62,6 @@ module Defender
     end
 
     private
-
-      def maze_solution
-        @maze_path = maze
-        find_path(0, 0)
-        @maze_path
-      end
-
-      def find_path(row, column)
-        # Outside maze?
-        if row < 0 or row >= rows or column < 0 or column >= columns
-          return false
-        end
-
-        # Is the goal?
-        if @maze_path[row][column] == PATH_END
-          return true
-        end
-
-        # Path open?
-        if @maze_path[row][column] != PATH_OPEN
-          return false
-        end
-
-        # Mark current path as right
-        @maze_path[row][column] = PATH_RIGHT
-
-        # If north path is right
-        if find_path(row - 1, column)
-          @maze_path[row][column] = PATH_GO_UP
-          return true
-        end
-
-        # If east path is right
-        if find_path(row, column + 1)
-          @maze_path[row][column] = PATH_GO_RIGHT
-          return true
-        end
-
-        # If south path is right
-        if find_path(row + 1, column)
-          @maze_path[row][column] = PATH_GO_DOWN
-          return true
-        end
-
-        # If west path is right
-        if find_path(row, column - 1)
-          @maze_path[row][column] = PATH_GO_LEFT
-          return true
-        end
-
-        # Mark current path as WRONG
-        @maze_path[row][column] = PATH_WRONG
-
-        return false
-      end
-
-      def maze
-        if @maze
-          return @maze
-        end
-        @maze = []
-        for row in 0...rows do
-          @maze.push([])
-          for column in 0...columns do
-            @maze[row].push(PATH_OPEN)
-          end
-        end
-        @maze[rows - 1][columns - 1] = PATH_END
-        @maze
-      end
 
       def draw_floor
         for column in 0...columns do
