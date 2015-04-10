@@ -49,6 +49,9 @@ module Defender
       if id == Gosu::KbEscape
         close
       end
+      if id == Gosu::MsLeft
+        @map.on_click(mouse_x, mouse_y)
+      end
     end
   end
 end

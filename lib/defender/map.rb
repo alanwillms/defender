@@ -3,6 +3,7 @@ module Defender
     GRASS_IMAGE = 'media/images/grass.png'
     MONSTER_SPAWNER_IMAGE = 'media/images/monster_spawner.png'
     DEFENDING_CITY_IMAGE = 'media/images/defending_city.png'
+    DEFENSE_IMAGE = 'media/images/defense.png'
 
     attr_reader :max_width, :max_height
 
@@ -27,6 +28,14 @@ module Defender
       row * tile_size
     end
 
+    def get_column_for_x(x)
+      x.to_i / tile_size.to_i
+    end
+
+    def get_row_for_y(y)
+      y.to_i / tile_size.to_i
+    end
+
     def columns
       @columns ||= @max_width.to_i / tile_size.to_i
     end
@@ -36,29 +45,28 @@ module Defender
     end
 
     def set_next_destination_for(monster)
-      # Current position
-      monster_row = monster.y.to_i / tile_size.to_i
-      monster_column = monster.x.to_i / tile_size.to_i
-
-      # Maze
-      next_step = @maze.path[monster_row][monster_column]
-      next_row = monster_row
-      next_column = monster_column
-
-      if next_step == Maze::PATH_GO_UP
-        next_row -= 1
-      elsif next_step == Maze::PATH_GO_DOWN
-        next_row += 1
-      elsif next_step == Maze::PATH_GO_LEFT
-        next_column -= 1
-      elsif next_step == Maze::PATH_GO_RIGHT
-        next_column += 1
-      end
-
-      # Next position
+      monster_row = get_row_for_y(monster.y)
+      monster_column = get_column_for_x(monster.x)
+      next_row, next_column = *@maze.next_position_for(monster_row, monster_column)
       x = get_x_for_column(next_column)
       y = get_y_for_row(next_row)
       monster.set_destination(x, y)
+    end
+
+    def on_click(mouse_x, mouse_y)
+      x1 = get_x_for_column(0)
+      x2 = get_x_for_column(columns - 1)
+      y1 = get_y_for_row(0)
+      y2 = get_y_for_row(rows - 1)
+      x_inside = mouse_x >= x1 and mouse_x <= x2
+      y_inside = mouse_y >= y1 and mouse_y <= y2
+
+      if x_inside and y_inside
+        # Block cell
+        clicked_column = get_column_for_x(mouse_x)
+        clicked_row = get_row_for_y(mouse_y)
+        @maze.block(clicked_row, clicked_column)
+      end
     end
 
     private
@@ -70,7 +78,16 @@ module Defender
             y = get_y_for_row(row)
             z = ZOrder::Background
 
-            get_tile.draw(x, y, z)
+            grass_tile.draw(x, y, z)
+
+            # Defense
+            if @maze.path[row][column] == Maze::PATH_BLOCKED
+              x = get_x_for_column(column)
+              y = get_y_for_row(row)
+              z = ZOrder::Building
+
+              defense_tile.draw(x, y, z)
+            end
           end
         end
       end
@@ -92,11 +109,15 @@ module Defender
       end
 
       def tile_size
-        @tile_size ||= get_tile.width
+        @tile_size ||= grass_tile.width
       end
 
-      def get_tile
+      def grass_tile
         @grass_tile ||= Gosu::Image.new(@window, GRASS_IMAGE, false)
+      end
+
+      def defense_tile
+        @defense_tile ||= Gosu::Image.new(@window, DEFENSE_IMAGE, false)
       end
   end
 end
