@@ -1,10 +1,13 @@
 class MonsterSpawner
-  attr_reader :monsters
+  attr_reader :monsters, :map, :x, :y
 
   def initialize(map)
     @map = map
     @monsters = Array.new
     @wave = 1
+    @x = @map.get_x_for_column(0)
+    @y = @map.get_y_for_row(0)
+    @z = ZOrder::Building
   end
 
   def spawn_wave
@@ -23,18 +26,15 @@ class MonsterSpawner
   end
 
   def draw
-    x = @map.get_x_for_column(0)
-    y = @map.get_y_for_row(0)
-    z = ZOrder::Building
-    SpriteHelper.image(:monster_spawner).draw(x, y, z)
+    SpriteHelper.image(:monster_spawner).draw(@x, @y, @z)
   end
 
   private
 
     def spawn
       speed = rand(1..4)
-      monster = Monster.new(speed, @map.get_x_for_column(0), @map.get_y_for_row(0))
-      monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))
+      monster = Monster.new(self, speed)
+      monster.set_target
       @monsters.push(monster)
       monster
     end

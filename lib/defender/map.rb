@@ -1,5 +1,5 @@
 class Map
-  attr_reader :max_width, :max_height
+  attr_reader :max_width, :max_height, :maze
 
   def initialize(max_width, max_height)
     @max_width = max_width
@@ -58,15 +58,6 @@ class Map
 
   def last_row
     rows - 1
-  end
-
-  def set_next_destination_for(monster)
-    monster_row = get_row_for_y(monster.y)
-    monster_column = get_column_for_x(monster.x)
-    next_row, next_column = *@maze.next_position_for(monster_row, monster_column)
-    x = get_x_for_column(next_column)
-    y = get_y_for_row(next_row)
-    monster.set_destination(x, y)
   end
 
   def monster_at_defending_city?(monster)

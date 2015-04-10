@@ -15,7 +15,7 @@ class Game
 
   def update
     @monster_spawner.monsters.each_with_index do |monster, index|
-      @map.set_next_destination_for(monster)
+      monster.set_target
       monster.move
       if @map.monster_at_defending_city?(monster)
         @defending_city.health_points -= monster.attack

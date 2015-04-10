@@ -7,19 +7,24 @@ class Monster
 
   attr_reader :x, :y, :attack
 
-  def initialize(speed, x, y)
+  def initialize(spawner, speed)
+    @spawner = spawner
     @speed = speed
-    @x = x
-    @y = y
+    @x = @spawner.x
+    @y = @spawner.y
     @target_x = 0
     @target_y = 0
     @attack = 10
     @facing = SPRITE_RIGHT_POSITION
   end
 
-  def set_destination(x, y)
-    @target_x = x
-    @target_y = y
+  def set_target
+    current_row = @spawner.map.get_row_for_y(@y)
+    current_column = @spawner.map.get_column_for_x(@x)
+    next_row, next_column = *@spawner.map.maze.next_position_for(current_row, current_column)
+    @target_x = @spawner.map.get_x_for_column(next_column)
+    @target_y = @spawner.map.get_y_for_row(next_row)
+
     if @x < @target_x
       @facing = SPRITE_RIGHT_POSITION
     elsif @x > @target_x
