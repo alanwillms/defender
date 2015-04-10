@@ -8,9 +8,24 @@ class Map
   end
 
   def draw
-    draw_floor
-    draw_monster_spawner
-    draw_defending_city
+    for column in 0...columns do
+      for row in 0...rows do
+        x = get_x_for_column(column)
+        y = get_y_for_row(row)
+        z = ZOrder::Background
+
+        SpriteHelper.image(:floor).draw(x, y, z)
+
+        # Defense
+        if @maze.path[row][column] == Maze::PATH_BLOCKED
+          x = get_x_for_column(column)
+          y = get_y_for_row(row)
+          z = ZOrder::Building
+
+          SpriteHelper.image(:defense).draw(x, y, z)
+        end
+      end
+    end
   end
 
   def get_x_for_column(column)
@@ -87,41 +102,6 @@ class Map
   end
 
   private
-
-    def draw_floor
-      for column in 0...columns do
-        for row in 0...rows do
-          x = get_x_for_column(column)
-          y = get_y_for_row(row)
-          z = ZOrder::Background
-
-          SpriteHelper.image(:floor).draw(x, y, z)
-
-          # Defense
-          if @maze.path[row][column] == Maze::PATH_BLOCKED
-            x = get_x_for_column(column)
-            y = get_y_for_row(row)
-            z = ZOrder::Building
-
-            SpriteHelper.image(:defense).draw(x, y, z)
-          end
-        end
-      end
-    end
-
-    def draw_monster_spawner
-      x = get_x_for_column(0)
-      y = get_y_for_row(0)
-      z = ZOrder::Building
-      SpriteHelper.image(:monster_spawner).draw(x, y, z)
-    end
-
-    def draw_defending_city
-      x = get_x_for_column(last_column)
-      y = get_y_for_row(last_row)
-      z = ZOrder::Building
-      SpriteHelper.image(:defending_city).draw(x, y, z)
-    end
 
     def tile_size
       @tile_size ||= SpriteHelper.image(:floor).width

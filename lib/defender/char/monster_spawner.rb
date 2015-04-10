@@ -22,6 +22,13 @@ class MonsterSpawner
     end
   end
 
+  def draw
+    x = @map.get_x_for_column(0)
+    y = @map.get_y_for_row(0)
+    z = ZOrder::Building
+    SpriteHelper.image(:monster_spawner).draw(x, y, z)
+  end
+
   private
 
     def spawn

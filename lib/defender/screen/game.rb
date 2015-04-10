@@ -8,10 +8,9 @@ class Game
 
     AudioHelper.play(:background_music, false)
 
+    @defending_city = DefendingCity.new(@map)
     @monster_spawner = MonsterSpawner.new(@map)
     @monster_spawner.spawn_wave
-
-    @defending_city = DefendingCity.new
   end
 
   def update
@@ -33,6 +32,8 @@ class Game
   def draw
     @map.draw
     @menu.draw
+    @defending_city.draw
+    @monster_spawner.draw
     @monster_spawner.monsters.each do |monster|
       monster.draw
     end
