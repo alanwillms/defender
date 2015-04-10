@@ -15,7 +15,7 @@ class GameScreen < BaseScreen
 
   def update
     @monster_spawner.monsters.each_with_index do |monster, index|
-      monster.set_target
+      monster.find_target
       monster.move
       if @map.monster_at_defending_city?(monster)
         @defending_city.health_points -= monster.attack

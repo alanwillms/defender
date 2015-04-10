@@ -8,7 +8,7 @@ class Map
     @rows = @max_height.to_i / MapHelper.tile_size
     @last_column = @columns - 1
     @last_row = @rows - 1
-    @maze = Maze.new(rows, @columns)
+    @maze = Maze.new(@rows, @columns)
   end
 
   def draw
