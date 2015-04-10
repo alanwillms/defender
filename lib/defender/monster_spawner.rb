@@ -9,7 +9,7 @@ module Defender
     end
 
     def spawn_wave
-      for i in 0..@wave do
+      for i in 0...@wave do
         spawn
       end
       @wave += 1
