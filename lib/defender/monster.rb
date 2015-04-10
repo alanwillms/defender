@@ -8,7 +8,7 @@ module Defender
 
     SPEED = 2
 
-    attr_reader :x, :y
+    attr_reader :x, :y, :attack
 
     def initialize(animation, x, y)
       @animation = animation
@@ -16,6 +16,7 @@ module Defender
       @y = y
       @target_x = 0
       @target_y = 0
+      @attack = 10
     end
 
     def set_destination(x, y)
@@ -28,9 +29,7 @@ module Defender
         @x += SPEED
       elsif @x > @target_x
         @x -= SPEED
-      end
-
-      if @y < @target_y
+      elsif @y < @target_y
         @y += SPEED
       elsif @y > @target_y
         @y -= SPEED

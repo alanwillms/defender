@@ -44,6 +44,14 @@ module Defender
       @rows ||= @max_height.to_i / tile_size.to_i
     end
 
+    def last_column
+      columns - 1
+    end
+
+    def last_row
+      rows - 1
+    end
+
     def set_next_destination_for(monster)
       monster_row = get_row_for_y(monster.y)
       monster_column = get_column_for_x(monster.x)
@@ -53,19 +61,30 @@ module Defender
       monster.set_destination(x, y)
     end
 
+    def monster_at_defending_city?(monster)
+      monster_row = get_row_for_y(monster.y)
+      monster_column = get_column_for_x(monster.x)
+      monster_row == last_row and monster_column == last_column
+    end
+
     def on_click(mouse_x, mouse_y)
       x1 = get_x_for_column(0)
-      x2 = get_x_for_column(columns - 1)
+      x2 = get_x_for_column(last_column) + tile_size
       y1 = get_y_for_row(0)
-      y2 = get_y_for_row(rows - 1)
+      y2 = get_y_for_row(last_row) + tile_size
       x_inside = mouse_x >= x1 and mouse_x <= x2
       y_inside = mouse_y >= y1 and mouse_y <= y2
 
       if x_inside and y_inside
-        # Block cell
         clicked_column = get_column_for_x(mouse_x)
         clicked_row = get_row_for_y(mouse_y)
-        @maze.block(clicked_row, clicked_column)
+
+        at_monster_spawner = clicked_row == 0 and clicked_column == 0
+        at_defending_city = clicked_row == last_row and clicked_column == last_column
+
+        unless at_monster_spawner or at_defending_city
+          @maze.block(clicked_row, clicked_column)
+        end
       end
     end
 
@@ -102,8 +121,8 @@ module Defender
 
       def draw_defending_city
         tile = Gosu::Image.new(@window, DEFENDING_CITY_IMAGE, false)
-        x = get_x_for_column(columns - 1)
-        y = get_y_for_row(rows - 1)
+        x = get_x_for_column(last_column)
+        y = get_y_for_row(last_row)
         z = ZOrder::Building
         tile.draw(x, y, z)
       end

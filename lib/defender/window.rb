@@ -1,13 +1,18 @@
 module Defender
   class Window < Gosu::Window
+    attr_reader :health_points
+
     def initialize
       # width, height, fullscreen, update_interval (16.666666)
-      super(960, 540, false)
+      # super(960, 540, false)
+      super(640, 480, false)
       self.caption = 'Defender'
 
       menu_width = 5 * 32
       @map = Map.new(self, self.width - menu_width, self.height)
       @menu = Menu.new(self, menu_width, self.height, @map.max_width, 0)
+
+      @health_points = 100
 
       @music = Gosu::Sample.new(self, "media/audio/music/digital_native.ogg")
       @music.play
@@ -23,9 +28,17 @@ module Defender
     # game main logic
     # move objects, handle collisions, etc.
     def update
-      @monsters.each do |monster|
+      @monsters.each_with_index do |monster, index|
         @map.set_next_destination_for(monster)
         monster.move
+        if @map.monster_at_defending_city?(monster)
+          @health_points -= monster.attack
+          @monsters.delete_at index
+
+          monster = Monster.new(@monster_anim, @map.get_x_for_column(0), @map.get_y_for_row(0))
+          monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))
+          @monsters.push(monster)
+        end
       end
     end
 

@@ -12,6 +12,7 @@ module Defender
 
     def draw
       @font.draw("Defender", @x + 32, @y + 32, ZOrder::UI)
+      @font.draw("HP = #{@window.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
       @defense_button.draw(@x + 32, @y + (3 * 32), ZOrder::UI)
     end
   end
