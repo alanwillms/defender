@@ -17,11 +17,21 @@ module Defender
       @target_x = 0
       @target_y = 0
       @attack = 10
+      @facing = SPRITE_RIGHT_POSITION
     end
 
     def set_destination(x, y)
       @target_x = x
       @target_y = y
+      if @x < @target_x
+        @facing = SPRITE_RIGHT_POSITION
+      elsif @x > @target_x
+        @facing = SPRITE_LEFT_POSITION
+      elsif @y < @target_y
+        @facing = SPRITE_DOWN_POSITION
+      elsif @y > @target_y
+        @facing = SPRITE_UP_POSITION
+      end
     end
 
     def move
@@ -37,8 +47,13 @@ module Defender
     end
 
     def draw
-      img = @animation[Gosu::milliseconds / 100 % SPRITE_FRAMES_COUNT] # @animation.size
+      img = @animation[current_sprite] # @animation.size
       img.draw(@x, @y, ZOrder::Character, 1, 1)
     end
+
+    private
+      def current_sprite
+        (Gosu::milliseconds / 100 % SPRITE_FRAMES_COUNT) + (@facing * SPRITE_FRAMES_COUNT)
+      end
   end
 end
