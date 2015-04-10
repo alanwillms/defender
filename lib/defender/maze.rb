@@ -49,6 +49,24 @@ module Defender
       [next_row, next_column]
     end
 
+    def block_all_paths?(current_row, current_column)
+      previous_status = @matrix[current_row][current_column]
+      block(current_row, current_column)
+      blocked_all_paths = true
+      for row in 0...@rows do
+        for column in 0...@columns do
+          current_cell = @solved_path[row][column]
+          if current_cell == Maze::PATH_GO_UP or current_cell == Maze::PATH_GO_DOWN or current_cell == Maze::PATH_GO_LEFT or current_cell == Maze::PATH_GO_RIGHT
+            blocked_all_paths = false
+            break
+          end
+        end
+      end
+      @matrix[current_row][current_column] = previous_status
+      solve_path
+      blocked_all_paths
+    end
+
     private
       def create_matrix
         matrix = []
