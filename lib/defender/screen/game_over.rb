@@ -1,10 +1,9 @@
 module Defender
   module Screen
     class GameOver
-      def initialize(window)
-        @window = window
-        Helper::Audio.play(@window, :game_over, false)
-        @font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
+      def initialize
+        Helper::Audio.play(:game_over, false)
+        @font = Gosu::Font.new(Window.current_window, Gosu::default_font_name, 20)
       end
 
       def update

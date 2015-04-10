@@ -3,15 +3,14 @@ module Defender
     class Game
       attr_reader :window, :health_points
 
-      def initialize(window)
-        @window = window
+      def initialize
         menu_width = 5 * 32
-        @map = Map.new(@window, @window.width - menu_width, @window.height)
-        @menu = Menu.new(self, menu_width, @window.height, @map.max_width, 0)
+        @map = Map.new(Window.current_window.width - menu_width, Window.current_window.height)
+        @menu = Menu.new(self, menu_width, Window.current_window.height, @map.max_width, 0)
 
         @health_points = 100
 
-        Helper::Audio.play(@window, :background_music, false)
+        Helper::Audio.play(:background_music, false)
 
         @monster_spawner = MonsterSpawner.new(@map)
         @monster_spawner.spawn
@@ -24,10 +23,10 @@ module Defender
           if @map.monster_at_defending_city?(monster)
             @health_points -= monster.attack
             @monster_spawner.unspawn(monster)
-            Helper::Audio.play(@window, :monster_attack)
+            Helper::Audio.play(:monster_attack)
 
             if @health_points <= 0
-              return @window.current_screen = GameOver.new(@window)
+              return Window.current_window.current_screen = GameOver.new
             end
 
             @monster_spawner.spawn
@@ -45,7 +44,7 @@ module Defender
 
       def button_down(id)
         if id == Gosu::MsLeft
-          @map.on_click(@window.mouse_x, @window.mouse_y)
+          @map.on_click(Window.current_window.mouse_x, Window.current_window.mouse_y)
         end
       end
     end
@@ -53,13 +52,12 @@ module Defender
     class Menu
       def initialize(screen, width, height, x, y)
         @screen = screen
-        @window = screen.window
         @x = x
         @y = y
         @width = width
         @height = height
-        @defense_button = Gosu::Image.new(@window, "media/images/defense.png", true)
-        @font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
+        @defense_button = Gosu::Image.new(Window.current_window, "media/images/defense.png", true)
+        @font = Gosu::Font.new(Window.current_window, Gosu::default_font_name, 20)
       end
 
       def draw

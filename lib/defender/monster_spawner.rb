@@ -4,7 +4,7 @@ module Defender
 
     def initialize(map)
       @map = map
-      @monster_anim = Gosu::Image::load_tiles(@map.window, "media/images/monster_sprite.png", 32, 32, false)
+      @monster_anim = Gosu::Image::load_tiles(Window.current_window, "media/images/monster_sprite.png", 32, 32, false)
       @monsters = Array.new
     end
 

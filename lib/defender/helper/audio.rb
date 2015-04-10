@@ -1,7 +1,7 @@
 module Defender
   module Helper
     class Audio
-      def self.play(window, effect, is_sfx = true)
+      def self.play(effect, is_sfx = true)
         source = nil
 
         case effect
@@ -19,9 +19,9 @@ module Defender
 
         if source
           if is_sfx
-            Gosu::Sample.new(window, source).play
+            Gosu::Sample.new(Window.current_window, source).play
           else
-            Gosu::Song.new(window, source).play(true)
+            Gosu::Song.new(Window.current_window, source).play(true)
           end
         end
       end

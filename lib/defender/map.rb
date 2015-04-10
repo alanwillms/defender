@@ -5,10 +5,9 @@ module Defender
     DEFENDING_CITY_IMAGE = 'media/images/defending_city.png'
     DEFENSE_IMAGE = 'media/images/defense.png'
 
-    attr_reader :max_width, :max_height, :window
+    attr_reader :max_width, :max_height
 
-    def initialize(window, max_width, max_height)
-      @window = window
+    def initialize(max_width, max_height)
       @max_width = max_width
       @max_height = max_height
       @maze = Maze.new(rows, columns)
@@ -85,10 +84,10 @@ module Defender
         blocks_path = @maze.block_all_paths?(clicked_row, clicked_column)
 
         if at_monster_spawner or at_defending_city or at_existing_defense or blocks_path
-          Helper::Audio.play(@window, :cant_build)
+          Helper::Audio.play :cant_build
         else
           @maze.block(clicked_row, clicked_column)
-          Helper::Audio.play(@window, :defense_built)
+          Helper::Audio.play :defense_built
         end
       end
     end
@@ -117,7 +116,7 @@ module Defender
       end
 
       def draw_monster_spawner
-        tile = Gosu::Image.new(@window, MONSTER_SPAWNER_IMAGE, false)
+        tile = Gosu::Image.new(Window.current_window, MONSTER_SPAWNER_IMAGE, false)
         x = get_x_for_column(0)
         y = get_y_for_row(0)
         z = ZOrder::Building
@@ -125,7 +124,7 @@ module Defender
       end
 
       def draw_defending_city
-        tile = Gosu::Image.new(@window, DEFENDING_CITY_IMAGE, false)
+        tile = Gosu::Image.new(Window.current_window, DEFENDING_CITY_IMAGE, false)
         x = get_x_for_column(last_column)
         y = get_y_for_row(last_row)
         z = ZOrder::Building
@@ -137,11 +136,11 @@ module Defender
       end
 
       def grass_tile
-        @grass_tile ||= Gosu::Image.new(@window, GRASS_IMAGE, false)
+        @grass_tile ||= Gosu::Image.new(Window.current_window, GRASS_IMAGE, false)
       end
 
       def defense_tile
-        @defense_tile ||= Gosu::Image.new(@window, DEFENSE_IMAGE, false)
+        @defense_tile ||= Gosu::Image.new(Window.current_window, DEFENSE_IMAGE, false)
       end
   end
 end

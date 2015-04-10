@@ -2,12 +2,19 @@ module Defender
   class Window < Gosu::Window
     attr_accessor :current_screen
 
+    @@current_window = nil
+
+    def self.current_window
+      @@current_window
+    end
+
     def initialize
       # width, height, fullscreen, update_interval (16.666666)
       super(960, 540, false)
       self.caption = 'Defender'
 
-      @current_screen = Screen::Game.new(self)
+      @@current_window = self
+      @current_screen = Screen::Game.new
     end
 
     # called 60 times per second
