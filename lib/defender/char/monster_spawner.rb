@@ -5,8 +5,8 @@ class MonsterSpawner
     @map = map
     @monsters = Array.new
     @wave = 1
-    @x = @map.get_x_for_column(0)
-    @y = @map.get_y_for_row(0)
+    @x = MapHelper.get_x_for_column(0)
+    @y = MapHelper.get_y_for_row(0)
     @z = ZOrder::Building
   end
 
