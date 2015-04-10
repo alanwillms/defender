@@ -13,29 +13,24 @@ module Defender
 
         Helper::Audio.play(@window, :background_music, false)
 
-        @monster_anim = Gosu::Image::load_tiles(@window, "media/images/monster_sprite.png", 32, 32, false)
-        @monsters = Array.new
-        monster = Monster.new(@monster_anim, @map.get_x_for_column(0), @map.get_y_for_row(0))
-        monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))
-        @monsters.push(monster)
+        @monster_spawner = MonsterSpawner.new(@map)
+        @monster_spawner.spawn
       end
 
       def update
-        @monsters.each_with_index do |monster, index|
+        @monster_spawner.monsters.each_with_index do |monster, index|
           @map.set_next_destination_for(monster)
           monster.move
           if @map.monster_at_defending_city?(monster)
             @health_points -= monster.attack
-            @monsters.delete_at index
+            @monster_spawner.unspawn(monster)
             Helper::Audio.play(@window, :monster_attack)
 
             if @health_points <= 0
               return @window.current_screen = GameOver.new(@window)
             end
 
-            monster = Monster.new(@monster_anim, @map.get_x_for_column(0), @map.get_y_for_row(0))
-            monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))
-            @monsters.push(monster)
+            @monster_spawner.spawn
           end
         end
       end
@@ -43,7 +38,7 @@ module Defender
       def draw
         @map.draw
         @menu.draw
-        @monsters.each do |monster|
+        @monster_spawner.monsters.each do |monster|
           monster.draw
         end
       end

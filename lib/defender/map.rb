@@ -5,7 +5,7 @@ module Defender
     DEFENDING_CITY_IMAGE = 'media/images/defending_city.png'
     DEFENSE_IMAGE = 'media/images/defense.png'
 
-    attr_reader :max_width, :max_height
+    attr_reader :max_width, :max_height, :window
 
     def initialize(window, max_width, max_height)
       @window = window
