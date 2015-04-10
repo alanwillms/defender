@@ -1,10 +1,5 @@
 module Defender
   class Map
-    GRASS_IMAGE = 'media/images/grass.png'
-    MONSTER_SPAWNER_IMAGE = 'media/images/monster_spawner.png'
-    DEFENDING_CITY_IMAGE = 'media/images/defending_city.png'
-    DEFENSE_IMAGE = 'media/images/defense.png'
-
     attr_reader :max_width, :max_height
 
     def initialize(max_width, max_height)
@@ -101,7 +96,7 @@ module Defender
             y = get_y_for_row(row)
             z = ZOrder::Background
 
-            grass_tile.draw(x, y, z)
+            Helper::Sprite.image(:floor).draw(x, y, z)
 
             # Defense
             if @maze.path[row][column] == Maze::PATH_BLOCKED
@@ -109,38 +104,28 @@ module Defender
               y = get_y_for_row(row)
               z = ZOrder::Building
 
-              defense_tile.draw(x, y, z)
+              Helper::Sprite.image(:defense).draw(x, y, z)
             end
           end
         end
       end
 
       def draw_monster_spawner
-        tile = Gosu::Image.new(Window.current_window, MONSTER_SPAWNER_IMAGE, false)
         x = get_x_for_column(0)
         y = get_y_for_row(0)
         z = ZOrder::Building
-        tile.draw(x, y, z)
+        Helper::Sprite.image(:monster_spawner).draw(x, y, z)
       end
 
       def draw_defending_city
-        tile = Gosu::Image.new(Window.current_window, DEFENDING_CITY_IMAGE, false)
         x = get_x_for_column(last_column)
         y = get_y_for_row(last_row)
         z = ZOrder::Building
-        tile.draw(x, y, z)
+        Helper::Sprite.image(:defending_city).draw(x, y, z)
       end
 
       def tile_size
-        @tile_size ||= grass_tile.width
-      end
-
-      def grass_tile
-        @grass_tile ||= Gosu::Image.new(Window.current_window, GRASS_IMAGE, false)
-      end
-
-      def defense_tile
-        @defense_tile ||= Gosu::Image.new(Window.current_window, DEFENSE_IMAGE, false)
+        @tile_size ||= Helper::Sprite.image(:floor).width
       end
   end
 end

@@ -56,14 +56,12 @@ module Defender
         @y = y
         @width = width
         @height = height
-        @defense_button = Gosu::Image.new(Window.current_window, "media/images/defense.png", true)
-        @font = Gosu::Font.new(Window.current_window, Gosu::default_font_name, 20)
       end
 
       def draw
-        @font.draw("Defender", @x + 32, @y + 32, ZOrder::UI)
-        @font.draw("HP = #{@screen.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
-        @defense_button.draw(@x + 32, @y + (3 * 32), ZOrder::UI)
+        Helper::Sprite.font.draw("Defender", @x + 32, @y + 32, ZOrder::UI)
+        Helper::Sprite.font.draw("HP = #{@screen.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
+        Helper::Sprite.image(:defense_button).draw(@x + 32, @y + (3 * 32), ZOrder::UI)
       end
     end
   end

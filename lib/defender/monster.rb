@@ -10,8 +10,7 @@ module Defender
 
     attr_reader :x, :y, :attack
 
-    def initialize(animation, x, y)
-      @animation = animation
+    def initialize(x, y)
       @x = x
       @y = y
       @target_x = 0
@@ -47,7 +46,7 @@ module Defender
     end
 
     def draw
-      img = @animation[current_sprite] # @animation.size
+      img = Helper::Sprite.tiles(:monster)[current_sprite] # @animation.size
       img.draw(@x, @y, ZOrder::Character, 1, 1)
     end
 
