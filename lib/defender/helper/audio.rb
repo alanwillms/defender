@@ -1,7 +1,7 @@
 module Defender
   module Helper
     class Audio
-      def self.play(window, effect, options = {})
+      def self.play(window, effect, is_sfx = true)
         source = nil
 
         case effect
@@ -13,11 +13,16 @@ module Defender
             source = "media/audio/sfx/monster_attack.wav"
           when :cant_build
             source = "media/audio/sfx/error.wav"
+          when :game_over
+            source = "media/audio/music/we_are_all_under_the_stars.ogg"
         end
 
         if source
-          sound = Gosu::Sample.new(window, source)
-          sound.play
+          if is_sfx
+            Gosu::Sample.new(window, source).play
+          else
+            Gosu::Song.new(window, source).play(true)
+          end
         end
       end
     end

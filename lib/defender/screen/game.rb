@@ -11,7 +11,7 @@ module Defender
 
         @health_points = 100
 
-        Helper::Audio.play(@window, :background_music, repeat: true)
+        Helper::Audio.play(@window, :background_music, false)
 
         @monster_anim = Gosu::Image::load_tiles(@window, "media/images/monster_sprite.png", 32, 32, false)
         @monsters = Array.new
@@ -28,6 +28,10 @@ module Defender
             @health_points -= monster.attack
             @monsters.delete_at index
             Helper::Audio.play(@window, :monster_attack)
+
+            if @health_points <= 0
+              return @window.current_screen = GameOver.new(@window)
+            end
 
             monster = Monster.new(@monster_anim, @map.get_x_for_column(0), @map.get_y_for_row(0))
             monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))

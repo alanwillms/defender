@@ -1,5 +1,7 @@
 module Defender
   class Window < Gosu::Window
+    attr_accessor :current_screen
+
     def initialize
       # width, height, fullscreen, update_interval (16.666666)
       super(960, 540, false)
