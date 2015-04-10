@@ -5,7 +5,9 @@ module Defender
       super(960, 540, false)
       self.caption = 'Defender'
 
-      @map = Map.new(self)
+      menu_width = 5 * 32
+      @map = Map.new(self, self.width - menu_width, self.height)
+      @menu = Menu.new(self, menu_width, self.height, @map.max_width, 0)
 
       @music = Gosu::Sample.new(self, "media/audio/music/digital_native.ogg")
       @music.play
@@ -32,6 +34,7 @@ module Defender
     # no logic whatsoever
     def draw
       @map.draw
+      @menu.draw
       @monsters.each do |monster|
         monster.draw
       end

@@ -15,8 +15,12 @@ module Defender
     PATH_GO_DOWN = '↓'
     PATH_GO_LEFT = '←'
 
-    def initialize(window)
+    attr_reader :max_width, :max_height
+
+    def initialize(window, max_width, max_height)
       @window = window
+      @max_width = max_width
+      @max_height = max_height
     end
 
     def draw
@@ -34,11 +38,11 @@ module Defender
     end
 
     def columns
-      @columns ||= @window.width.to_i / tile_size.to_i
+      @columns ||= @max_width.to_i / tile_size.to_i
     end
 
     def rows
-      @rows ||= @window.height.to_i / tile_size.to_i
+      @rows ||= @max_height.to_i / tile_size.to_i
     end
 
     def set_next_destination_for(monster)

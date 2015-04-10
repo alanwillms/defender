@@ -6,7 +6,7 @@ module Defender
     SPRITE_UP_POSITION = 2
     SPRITE_LEFT_POSITION = 3
 
-    SPEED = 1
+    SPEED = 2
 
     attr_reader :x, :y
 
