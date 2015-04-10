@@ -83,7 +83,9 @@ module Defender
         at_defending_city = (clicked_row == last_row and clicked_column == last_column)
         at_existing_defense = (@maze.path[clicked_row][clicked_column] == Maze::PATH_BLOCKED)
 
-        unless at_monster_spawner or at_defending_city or at_existing_defense
+        if at_monster_spawner or at_defending_city or at_existing_defense
+          Helper::Audio.play(@window, :cant_build)
+        else
           @maze.block(clicked_row, clicked_column)
           Helper::Audio.play(@window, :defense_built)
         end

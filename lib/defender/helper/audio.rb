@@ -11,6 +11,8 @@ module Defender
             source = "media/audio/sfx/defense_built.wav"
           when :monster_attack
             source = "media/audio/sfx/monster_attack.wav"
+          when :cant_build
+            source = "media/audio/sfx/error.wav"
         end
 
         if source
