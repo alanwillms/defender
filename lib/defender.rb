@@ -4,8 +4,8 @@ require 'defender/helper'
 require 'defender/maze'
 require 'defender/monster'
 require 'defender/window'
-require 'defender/menu'
 require 'defender/map'
+require 'defender/screen'
 
 module Defender
 end
