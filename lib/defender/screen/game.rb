@@ -1,17 +1,17 @@
 class Game
-  attr_reader :window, :health_points
+  attr_reader :window, :defending_city
 
   def initialize
     menu_width = 5 * 32
     @map = Map.new(Window.current_window.width - menu_width, Window.current_window.height)
     @menu = Menu.new(self, menu_width, Window.current_window.height, @map.max_width, 0)
 
-    @health_points = 100
-
     AudioHelper.play(:background_music, false)
 
     @monster_spawner = MonsterSpawner.new(@map)
     @monster_spawner.spawn_wave
+
+    @defending_city = DefendingCity.new
   end
 
   def update
@@ -19,11 +19,11 @@ class Game
       @map.set_next_destination_for(monster)
       monster.move
       if @map.monster_at_defending_city?(monster)
-        @health_points -= monster.attack
+        @defending_city.health_points -= monster.attack
         @monster_spawner.unspawn(monster)
         AudioHelper.play(:monster_attack)
 
-        if @health_points <= 0
+        if @defending_city.health_points <= 0
           return Window.current_window.current_screen = GameOver.new
         end
       end
@@ -56,7 +56,7 @@ class Menu
 
   def draw
     SpriteHelper.font.draw("Defender", @x + 32, @y + 32, ZOrder::UI)
-    SpriteHelper.font.draw("HP = #{@screen.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
+    SpriteHelper.font.draw("HP = #{@screen.defending_city.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
     SpriteHelper.image(:defense_button).draw(@x + 32, @y + (3 * 32), ZOrder::UI)
   end
 end
