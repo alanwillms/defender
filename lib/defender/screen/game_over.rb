@@ -1,4 +1,4 @@
-class GameOver
+class GameOverScreen
   def initialize
     AudioHelper.play(:game_over, false)
   end

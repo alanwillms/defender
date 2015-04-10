@@ -1,4 +1,4 @@
-class Game
+class GameScreen
   attr_reader :window, :defending_city
 
   def initialize
@@ -23,7 +23,7 @@ class Game
         AudioHelper.play(:monster_attack)
 
         if @defending_city.health_points <= 0
-          return Window.current_window.current_screen = GameOver.new
+          return Window.current_window.current_screen = GameOverScreen.new
         end
       end
     end

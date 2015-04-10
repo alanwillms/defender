@@ -13,7 +13,7 @@ class Window < Gosu::Window
     self.caption = 'Defender'
 
     @@current_window = self
-    @current_screen = Game.new
+    @current_screen = GameScreen.new
   end
 
   # called 60 times per second
