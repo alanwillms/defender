@@ -6,11 +6,10 @@ module Defender
     SPRITE_UP_POSITION = 2
     SPRITE_LEFT_POSITION = 3
 
-    SPEED = 2
-
     attr_reader :x, :y, :attack
 
-    def initialize(x, y)
+    def initialize(speed, x, y)
+      @speed = speed
       @x = x
       @y = y
       @target_x = 0
@@ -35,13 +34,13 @@ module Defender
 
     def move
       if @x < @target_x
-        @x += SPEED
+        @x += @speed
       elsif @x > @target_x
-        @x -= SPEED
+        @x -= @speed
       elsif @y < @target_y
-        @y += SPEED
+        @y += @speed
       elsif @y > @target_y
-        @y -= SPEED
+        @y -= @speed
       end
     end
 

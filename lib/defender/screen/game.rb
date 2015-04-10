@@ -13,7 +13,7 @@ module Defender
         Helper::Audio.play(:background_music, false)
 
         @monster_spawner = MonsterSpawner.new(@map)
-        @monster_spawner.spawn
+        @monster_spawner.spawn_wave
       end
 
       def update
@@ -28,8 +28,6 @@ module Defender
             if @health_points <= 0
               return Window.current_window.current_screen = GameOver.new
             end
-
-            @monster_spawner.spawn
           end
         end
       end
