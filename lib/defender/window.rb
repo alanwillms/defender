@@ -5,7 +5,7 @@ module Defender
     def initialize
       # width, height, fullscreen, update_interval (16.666666)
       # super(960, 540, false)
-      super(640, 480, false)
+      super(320, 240, false)
       self.caption = 'Defender'
 
       menu_width = 5 * 32

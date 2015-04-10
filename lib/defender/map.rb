@@ -79,8 +79,8 @@ module Defender
         clicked_column = get_column_for_x(mouse_x)
         clicked_row = get_row_for_y(mouse_y)
 
-        at_monster_spawner = clicked_row == 0 and clicked_column == 0
-        at_defending_city = clicked_row == last_row and clicked_column == last_column
+        at_monster_spawner = (clicked_row == 0 and clicked_column == 0)
+        at_defending_city = (clicked_row == last_row and clicked_column == last_column)
 
         unless at_monster_spawner or at_defending_city
           @maze.block(clicked_row, clicked_column)
