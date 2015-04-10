@@ -4,8 +4,7 @@ module Defender
 
     def initialize
       # width, height, fullscreen, update_interval (16.666666)
-      # super(960, 540, false)
-      super(320, 240, false)
+      super(960, 540, false)
       self.caption = 'Defender'
 
       menu_width = 5 * 32
@@ -14,8 +13,7 @@ module Defender
 
       @health_points = 100
 
-      @music = Gosu::Sample.new(self, "media/audio/music/digital_native.ogg")
-      @music.play
+      Helper::Audio.play(self, :background_music, repeat: true)
 
       @monster_anim = Gosu::Image::load_tiles(self, "media/images/monster_sprite.png", 32, 32, false)
       @monsters = Array.new
@@ -34,6 +32,7 @@ module Defender
         if @map.monster_at_defending_city?(monster)
           @health_points -= monster.attack
           @monsters.delete_at index
+          Helper::Audio.play(self, :monster_attack)
 
           monster = Monster.new(@monster_anim, @map.get_x_for_column(0), @map.get_y_for_row(0))
           monster.set_destination(@map.get_x_for_column(@map.columns - 1), @map.get_y_for_row(@map.rows - 1))
