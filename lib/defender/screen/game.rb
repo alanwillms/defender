@@ -1,4 +1,4 @@
-class GameScreen
+class GameScreen < BaseScreen
   attr_reader :window, :defending_city
 
   def initialize
