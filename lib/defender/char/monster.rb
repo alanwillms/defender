@@ -12,12 +12,14 @@ class Monster
     @speed = speed
     @attack = 10
     @facing = SPRITE_RIGHT_POSITION
-    @x = @y = @target_x = @target_y = 0
+    @x = @y = @target_x = @target_y = @current_row = @current_column = 0
   end
 
-  def warp(x, y)
-    @x = x
-    @y = y
+  def warp(row, column)
+    @x = MapHelper.get_x_for_column(column)
+    @y = MapHelper.get_y_for_row(row)
+    @current_row = row
+    @current_column = column
   end
 
   def find_target
@@ -28,34 +30,6 @@ class Monster
   def move
     unless move_y
       move_x
-    end
-  end
-
-  def move_x
-    if @x < @target_x
-      @x += @speed
-      @x = @target_x if @x > @target_x
-      true
-    elsif @x > @target_x
-      @x -= @speed
-      @x = @target_x if @x < @target_x
-      true
-    else
-      false
-    end
-  end
-
-  def move_y
-    if @y < @target_y
-      @y += @speed
-      @y = @target_y if @y > @target_y
-      true
-    elsif @y > @target_y
-      @y -= @speed
-      @y = @target_y if @y < @target_y
-      true
-    else
-      false
     end
   end
 
@@ -70,9 +44,7 @@ class Monster
     end
 
     def set_target
-      current_row = MapHelper.get_row_for_y(@y)
-      current_column = MapHelper.get_column_for_x(@x)
-      next_row, next_column = *@maze.solution.next_position_for(current_row, current_column)
+      next_row, next_column = *@maze.solution.next_position_for(@current_row, @current_column)
       @target_x = MapHelper.get_x_for_column(next_column)
       @target_y = MapHelper.get_y_for_row(next_row)
     end
@@ -87,5 +59,39 @@ class Monster
       elsif @x > @target_x
         @facing = SPRITE_LEFT_POSITION
       end
+    end
+
+    def move_x
+      changed = false
+      if @x < @target_x
+        @x += @speed
+        @x = @target_x if @x > @target_x
+        changed = true
+      elsif @x > @target_x
+        @x -= @speed
+        @x = @target_x if @x < @target_x
+        changed = true
+      end
+      if @x == @target_x
+        @current_column = MapHelper.get_column_for_x(@x)
+      end
+      changed
+    end
+
+    def move_y
+      changed = false
+      if @y < @target_y
+        @y += @speed
+        @y = @target_y if @y > @target_y
+        changed = true
+      elsif @y > @target_y
+        @y -= @speed
+        @y = @target_y if @y < @target_y
+        changed = true
+      end
+      if @y == @target_y
+        @current_row = MapHelper.get_row_for_y(@y)
+      end
+      changed
     end
 end
