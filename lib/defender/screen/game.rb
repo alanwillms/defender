@@ -1,5 +1,5 @@
 class GameScreen < BaseScreen
-  attr_reader :window, :defending_city
+  attr_reader :window, :defending_city, :monster_spawner
 
   def initialize
     menu_width = 5 * 32

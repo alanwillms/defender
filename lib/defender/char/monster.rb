@@ -5,7 +5,7 @@ class Monster
   SPRITE_UP_POSITION = 2
   SPRITE_LEFT_POSITION = 3
 
-  attr_reader :x, :y, :attack
+  attr_reader :x, :y, :attack, :maze_solver, :current_row, :current_column
 
   def initialize(maze, speed)
     @maze = maze
@@ -13,6 +13,7 @@ class Monster
     @attack = 10
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
+    @maze_solver = update_maze_solver
   end
 
   def warp(row, column)
@@ -20,6 +21,7 @@ class Monster
     @y = MapHelper.get_y_for_row(row)
     @current_row = row
     @current_column = column
+    update_maze_solver
   end
 
   def find_target
@@ -43,8 +45,12 @@ class Monster
       (Gosu::milliseconds / 100 % SPRITE_FRAMES_COUNT) + (@facing * SPRITE_FRAMES_COUNT)
     end
 
+    def maze_solution
+
+    end
+
     def set_target
-      next_row, next_column = *@maze.solution.next_position_for(@current_row, @current_column)
+      next_row, next_column = *@maze_solver.next_position_for(@current_row, @current_column)
       @target_x = MapHelper.get_x_for_column(next_column)
       @target_y = MapHelper.get_y_for_row(next_row)
     end
@@ -74,6 +80,7 @@ class Monster
       end
       if @x == @target_x
         @current_column = MapHelper.get_column_for_x(@x)
+        update_maze_solver
       end
       changed
     end
@@ -91,7 +98,13 @@ class Monster
       end
       if @y == @target_y
         @current_row = MapHelper.get_row_for_y(@y)
+        update_maze_solver
       end
       changed
+    end
+
+    def update_maze_solver
+      matrix = MapHelper.clone_matrix(@maze.matrix)
+      @maze_solver = @maze.create_solution(matrix, @current_row, @current_column)
     end
 end

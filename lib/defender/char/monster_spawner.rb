@@ -31,6 +31,20 @@ class MonsterSpawner
     SpriteHelper.image(:monster_spawner).draw(@x, @y, @z)
   end
 
+  def block_any_monser_path?(row, column)
+    blocks = false
+    matrix = MapHelper.clone_matrix(@map.maze.matrix)
+    matrix[row][column] = Maze::PATH_BLOCKED
+    @monsters.each do |monster|
+      solver = @map.maze.create_solution(matrix, monster.current_row, monster.current_column)
+      unless solver.has_solution?
+        blocks = true
+        break
+      end
+    end
+    blocks
+  end
+
   private
 
     def spawn
