@@ -26,18 +26,36 @@ class Monster
   end
 
   def move
+    unless move_y
+      move_x
+    end
+  end
+
+  def move_x
     if @x < @target_x
       @x += @speed
       @x = @target_x if @x > @target_x
+      true
     elsif @x > @target_x
       @x -= @speed
       @x = @target_x if @x < @target_x
-    elsif @y < @target_y
+      true
+    else
+      false
+    end
+  end
+
+  def move_y
+    if @y < @target_y
       @y += @speed
       @y = @target_y if @y > @target_y
+      true
     elsif @y > @target_y
       @y -= @speed
       @y = @target_y if @y < @target_y
+      true
+    else
+      false
     end
   end
 
@@ -60,14 +78,14 @@ class Monster
     end
 
     def set_face
-      if @x < @target_x
-        @facing = SPRITE_RIGHT_POSITION
-      elsif @x > @target_x
-        @facing = SPRITE_LEFT_POSITION
-      elsif @y < @target_y
+      if @y < @target_y
         @facing = SPRITE_DOWN_POSITION
       elsif @y > @target_y
         @facing = SPRITE_UP_POSITION
+      elsif @x < @target_x
+        @facing = SPRITE_RIGHT_POSITION
+      elsif @x > @target_x
+        @facing = SPRITE_LEFT_POSITION
       end
     end
 end
