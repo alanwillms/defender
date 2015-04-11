@@ -33,7 +33,8 @@ class MonsterSpawner
 
     def spawn
       speed = rand(1..4)
-      monster = Monster.new(self, speed)
+      monster = Monster.new(@map.maze, speed)
+      monster.warp(@x, @y)
       monster.find_target
       @monsters.push(monster)
       monster

@@ -7,15 +7,17 @@ class Monster
 
   attr_reader :x, :y, :attack
 
-  def initialize(spawner, speed)
-    @spawner = spawner
+  def initialize(maze, speed)
+    @maze = maze
     @speed = speed
-    @x = @spawner.x
-    @y = @spawner.y
-    @target_x = 0
-    @target_y = 0
     @attack = 10
     @facing = SPRITE_RIGHT_POSITION
+    @x = @y = @target_x = @target_y = 0
+  end
+
+  def warp(x, y)
+    @x = x
+    @y = y
   end
 
   def find_target
@@ -26,12 +28,16 @@ class Monster
   def move
     if @x < @target_x
       @x += @speed
+      @x = @target_x if @x > @target_x
     elsif @x > @target_x
       @x -= @speed
+      @x = @target_x if @x < @target_x
     elsif @y < @target_y
       @y += @speed
+      @y = @target_y if @y > @target_y
     elsif @y > @target_y
       @y -= @speed
+      @y = @target_y if @y < @target_y
     end
   end
 
@@ -48,7 +54,7 @@ class Monster
     def set_target
       current_row = MapHelper.get_row_for_y(@y)
       current_column = MapHelper.get_column_for_x(@x)
-      next_row, next_column = *@spawner.map.maze.solution.next_position_for(current_row, current_column)
+      next_row, next_column = *@maze.solution.next_position_for(current_row, current_column)
       @target_x = MapHelper.get_x_for_column(next_column)
       @target_y = MapHelper.get_y_for_row(next_row)
     end
