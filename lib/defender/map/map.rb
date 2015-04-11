@@ -21,7 +21,7 @@ class Map
         SpriteHelper.image(:floor).draw(x, y, z)
 
         # Defense
-        if @maze.path[row][column] == Maze::PATH_BLOCKED
+        if @maze.matrix[row][column] == Maze::PATH_BLOCKED
           x = MapHelper.get_x_for_column(column)
           y = MapHelper.get_y_for_row(row)
           z = ZOrder::Building
@@ -39,20 +39,25 @@ class Map
   end
 
   def on_click(mouse_x, mouse_y)
-    x1 = MapHelper.get_x_for_column(0)
+    x1 = 0
     x2 = MapHelper.get_x_for_column(@last_column) + MapHelper.tile_size
-    y1 = MapHelper.get_y_for_row(0)
+    y1 = 0
     y2 = MapHelper.get_y_for_row(@last_row) + MapHelper.tile_size
-    x_inside = mouse_x >= x1 and mouse_x <= x2
-    y_inside = mouse_y >= y1 and mouse_y <= y2
+    x_inside = (mouse_x >= x1 and mouse_x <= x2)
+    y_inside = (mouse_y >= y1 and mouse_y <= y2)
 
     if x_inside and y_inside
-      clicked_column = MapHelper.get_column_for_x(mouse_x)
-      clicked_row = MapHelper.get_row_for_y(mouse_y)
+
+      clicked_column = MapHelper.get_column_for_x(mouse_x.to_i)
+      clicked_row = MapHelper.get_row_for_y(mouse_y.to_i)
+
+      if clicked_column < 0 or clicked_column > @last_column or clicked_row < 0 or clicked_row > @last_row
+        return
+      end
 
       at_monster_spawner = (clicked_row == 0 and clicked_column == 0)
       at_defending_city = (clicked_row == @last_row and clicked_column == @last_column)
-      at_existing_defense = (@maze.path[clicked_row][clicked_column] == Maze::PATH_BLOCKED)
+      at_existing_defense = (@maze.matrix[clicked_row][clicked_column] == Maze::PATH_BLOCKED)
       blocks_path = @maze.block_all_paths?(clicked_row, clicked_column)
 
       if at_monster_spawner or at_defending_city or at_existing_defense or blocks_path

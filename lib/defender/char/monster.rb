@@ -48,7 +48,7 @@ class Monster
     def set_target
       current_row = MapHelper.get_row_for_y(@y)
       current_column = MapHelper.get_column_for_x(@x)
-      next_row, next_column = *@spawner.map.maze.next_position_for(current_row, current_column)
+      next_row, next_column = *@spawner.map.maze.solution.next_position_for(current_row, current_column)
       @target_x = MapHelper.get_x_for_column(next_column)
       @target_y = MapHelper.get_y_for_row(next_row)
     end
