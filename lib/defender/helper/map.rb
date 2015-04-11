@@ -20,4 +20,16 @@ class MapHelper
   def self.tile_size
     @@tile_size ||= SpriteHelper.image(:floor).width
   end
+
+  def self.clone_matrix(original)
+    cloned_matrix = []
+    original.each do |row|
+      new_row = []
+      row.each do |cell|
+        new_row.push cell.dup
+      end
+      cloned_matrix.push new_row
+    end
+    cloned_matrix
+  end
 end

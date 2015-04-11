@@ -1,0 +1,73 @@
+class MazeSolver
+  def initialize(matrix, starting_row, starting_column)
+    @matrix = matrix
+    @starting_row = starting_row
+    @starting_column = starting_column
+    # @matrix[@starting_row][@starting_column] = Maze::PATH_START
+    @rows = @matrix.size
+    @columns = @matrix[0].size
+  end
+
+  def solution
+    unless @solved_path
+      solve_path
+    end
+    @solved_path
+  end
+
+  private
+    def solve_path
+      @solved_path = MapHelper.clone_matrix(@matrix)
+      find_path(@starting_row, @starting_column)
+      @solved_path
+    end
+
+    def find_path(row, column)
+      # Outside maze?
+      if row < 0 or row >= @rows or column < 0 or column >= @columns
+        return false
+      end
+
+      # Is the goal?
+      if @solved_path[row][column] == Maze::PATH_END
+        return true
+      end
+
+      # Path open?
+      if @solved_path[row][column] != Maze::PATH_OPEN
+        return false
+      end
+
+      # Mark current path as right
+      @solved_path[row][column] = Maze::PATH_RIGHT
+
+      # If north path is right
+      if find_path(row - 1, column)
+        @solved_path[row][column] = Maze::PATH_GO_UP
+        return true
+      end
+
+      # If east path is right
+      if find_path(row, column + 1)
+        @solved_path[row][column] = Maze::PATH_GO_RIGHT
+        return true
+      end
+
+      # If south path is right
+      if find_path(row + 1, column)
+        @solved_path[row][column] = Maze::PATH_GO_DOWN
+        return true
+      end
+
+      # If west path is right
+      if find_path(row, column - 1)
+        @solved_path[row][column] = Maze::PATH_GO_LEFT
+        return true
+      end
+
+      # Mark current path as WRONG
+      @solved_path[row][column] = Maze::PATH_WRONG
+
+      return false
+    end
+end

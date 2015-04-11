@@ -19,10 +19,10 @@ class SpriteHelper
         source = "media/images/defense.png"
     end
 
-    if @@images[source].nil?
-      @@images[source] = Gosu::Image.new(Window.current_window, source, true)
+    if @@images[source.to_sym].nil?
+      @@images[source.to_sym] = Gosu::Image.new(Window.current_window, source, true)
     end
-    @@images[source]
+    @@images[source.to_sym]
   end
 
   def self.font(identifier = :default)
@@ -45,9 +45,9 @@ class SpriteHelper
         tile_height = 32
     end
 
-    if @@tilesets[source].nil?
-      @@tilesets[source] = Gosu::Image::load_tiles(Window.current_window, source, tile_width, tile_height, tileable)
+    if @@tilesets[source.to_sym].nil?
+      @@tilesets[source.to_sym] = Gosu::Image::load_tiles(Window.current_window, source, tile_width, tile_height, tileable)
     end
-    @@tilesets[source]
+    @@tilesets[source.to_sym]
   end
 end
