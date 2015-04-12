@@ -18,7 +18,7 @@ class GameScreen < BaseScreen
       monster.find_target
       monster.move
       if @map.monster_at_defending_city?(monster)
-        @defending_city.health_points -= monster.attack
+        monster.attack!(@defending_city)
         @monster_spawner.unspawn(monster)
         AudioHelper.play(:monster_attack)
 

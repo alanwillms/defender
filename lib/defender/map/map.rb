@@ -59,7 +59,7 @@ class Map
       at_defending_city = (clicked_row == @last_row and clicked_column == @last_column)
       at_existing_defense = (@maze.matrix[clicked_row][clicked_column] == Maze::PATH_BLOCKED)
       blocks_path = @maze.block_all_paths?(clicked_row, clicked_column)
-      blocks_monster = Window.current_window.current_screen.monster_spawner.block_any_monser_path?(clicked_row, clicked_column)
+      blocks_monster = Window.current_window.current_screen.monster_spawner.block_any_monster_path?(clicked_row, clicked_column)
 
       if at_monster_spawner or at_defending_city or at_existing_defense or blocks_path or blocks_monster
         AudioHelper.play :cant_build

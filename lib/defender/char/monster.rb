@@ -5,7 +5,7 @@ class Monster
   SPRITE_UP_POSITION = 2
   SPRITE_LEFT_POSITION = 3
 
-  attr_reader :x, :y, :attack, :maze_solver, :current_row, :current_column
+  attr_reader :x, :y, :maze_solver, :current_row, :current_column
 
   def initialize(maze, speed)
     @maze = maze
@@ -14,6 +14,7 @@ class Monster
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
+    @last_maze_matrix = nil
   end
 
   def warp(row, column)
@@ -35,18 +36,27 @@ class Monster
     end
   end
 
+  def attack!(target)
+    target.health_points -= @attack
+  end
+
   def draw
     img = SpriteHelper.tiles(:monster)[current_sprite] # @animation.size
     img.draw(@x, @y, ZOrder::Character, 1, 1)
   end
 
   private
-    def current_sprite
-      (Gosu::milliseconds / 100 % SPRITE_FRAMES_COUNT) + (@facing * SPRITE_FRAMES_COUNT)
+    def maze_changed?
+      current_maze_matrix = @maze.matrix.inspect.to_sym
+      if @last_maze_matrix.nil? or @last_maze_matrix != current_maze_matrix
+        @last_maze_matrix = current_maze_matrix
+        return true
+      end
+      false
     end
 
-    def maze_solution
-
+    def current_sprite
+      (Gosu::milliseconds / 100 % SPRITE_FRAMES_COUNT) + (@facing * SPRITE_FRAMES_COUNT)
     end
 
     def set_target
@@ -80,7 +90,7 @@ class Monster
       end
       if @x == @target_x
         @current_column = MapHelper.get_column_for_x(@x)
-        update_maze_solver
+        update_maze_solver if maze_changed?
       end
       changed
     end
@@ -98,7 +108,7 @@ class Monster
       end
       if @y == @target_y
         @current_row = MapHelper.get_row_for_y(@y)
-        update_maze_solver
+        update_maze_solver if maze_changed?
       end
       changed
     end
