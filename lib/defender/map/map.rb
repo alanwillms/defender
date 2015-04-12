@@ -13,8 +13,19 @@ class Map
     @monsters = []
   end
 
+  def buildings_count
+    counter = 0
+    @buildings.each do |row|
+      row.each do |cell|
+        unless cell.nil?
+          counter += 1
+        end
+      end
+    end
+    counter
+  end
+
   def build_random_walls
-    # Random walls
     rand(1..(@rows*@columns/3)).times do
       row, column = *random_cell
       if can_build_at?(row, column)

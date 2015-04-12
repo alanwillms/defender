@@ -1,5 +1,5 @@
 class GameScreen < BaseScreen
-  attr_reader :window, :defending_city, :monster_spawner
+  attr_reader :window, :defending_city, :monster_spawner, :map
 
   def initialize
     menu_width = 5 * 32
@@ -59,6 +59,8 @@ class Menu
   def draw
     SpriteHelper.font.draw("Defender", @x + 32, @y + 32, ZOrder::UI)
     SpriteHelper.font.draw("HP = #{@screen.defending_city.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
-    SpriteHelper.image(:defense_button).draw(@x + 32, @y + (3 * 32), ZOrder::UI)
+    SpriteHelper.font.draw("Buildings = #{@screen.map.buildings_count}", @x + 32, @y + (32 * 3), ZOrder::UI)
+    SpriteHelper.font.draw("Monsters = #{@screen.map.monsters.size}", @x + 32, @y + (32 * 4), ZOrder::UI)
+    SpriteHelper.image(:defense_button).draw(@x + 32, @y + (32 * 5), ZOrder::UI)
   end
 end
