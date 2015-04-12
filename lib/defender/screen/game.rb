@@ -17,7 +17,7 @@ class GameScreen < BaseScreen
   end
 
   def update
-    @monster_spawner.monsters.each_with_index do |monster, index|
+    @map.monsters.each_with_index do |monster, index|
       monster.find_target
       monster.move
       if @map.monster_at_defending_city?(monster)
@@ -35,7 +35,7 @@ class GameScreen < BaseScreen
   def draw
     @map.draw
     @menu.draw
-    @monster_spawner.monsters.each do |monster|
+    @map.monsters.each do |monster|
       monster.draw
     end
   end

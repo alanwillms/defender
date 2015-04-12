@@ -1,5 +1,5 @@
 class Map
-  attr_reader :max_width, :max_height, :maze, :rows, :columns, :last_row, :last_column
+  attr_reader :max_width, :max_height, :maze, :rows, :columns, :last_row, :last_column, :monsters
 
   def initialize(max_width, max_height)
     @max_width = max_width
@@ -10,6 +10,7 @@ class Map
     @last_row = @rows - 1
     @maze = Maze.new(@rows, @columns)
     @buildings = MapHelper.create_matrix(@rows, @columns)
+    @monsters = []
   end
 
   def build_random_walls
@@ -90,12 +91,27 @@ class Map
     def can_build_at?(row, column)
       at_blocked_cell = has_element_at?(row, column)
       blocks_path = @maze.block_all_paths?(row, column)
-      blocks_monster = (Window.current_window.current_screen.nil? == false and Window.current_window.current_screen.monster_spawner.block_any_monster_path?(row, column))
+      blocks_monster = block_any_monster_path?(row, column)
 
       DebugHelper.string("at_blocked_cell: #{at_blocked_cell.inspect}")
       DebugHelper.string("blocks_path: #{blocks_path.inspect}")
       DebugHelper.string("blocks_monster: #{blocks_monster.inspect}")
 
       not (at_blocked_cell or blocks_path or blocks_monster)
+    end
+
+    def block_any_monster_path?(row, column)
+      blocks = false
+      matrix = MapHelper.clone_matrix(@maze.matrix)
+      matrix[row][column] = Maze::PATH_BLOCKED
+      @monsters.each do |monster|
+        monster_matrix = MapHelper.clone_matrix(matrix)
+        solver = @maze.create_solution(monster_matrix, monster.current_row, monster.current_column)
+        unless solver.has_solution?
+          blocks = true
+          break
+        end
+      end
+      blocks
     end
 end
