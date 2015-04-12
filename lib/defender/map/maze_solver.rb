@@ -17,17 +17,18 @@ class MazeSolver
   end
 
   def has_solution?
-    blocked_all_paths = true
+    has_solution = false
     for row in 0...@rows do
       for column in 0...@columns do
         current_cell = solution[row][column]
         if current_cell == Maze::PATH_GO_UP or current_cell == Maze::PATH_GO_DOWN or current_cell == Maze::PATH_GO_LEFT or current_cell == Maze::PATH_GO_RIGHT
-          blocked_all_paths = false
+          has_solution = true
           break
         end
       end
+      break if has_solution
     end
-    blocked_all_paths
+    has_solution
   end
 
   def next_position_for(current_row, current_column)

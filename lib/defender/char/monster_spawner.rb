@@ -36,7 +36,8 @@ class MonsterSpawner
     matrix = MapHelper.clone_matrix(@map.maze.matrix)
     matrix[row][column] = Maze::PATH_BLOCKED
     @monsters.each do |monster|
-      solver = @map.maze.create_solution(matrix, monster.current_row, monster.current_column)
+      monster_matrix = MapHelper.clone_matrix(matrix)
+      solver = @map.maze.create_solution(monster_matrix, monster.current_row, monster.current_column)
       unless solver.has_solution?
         blocks = true
         break

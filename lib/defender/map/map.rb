@@ -61,6 +61,12 @@ class Map
       blocks_path = @maze.block_all_paths?(clicked_row, clicked_column)
       blocks_monster = Window.current_window.current_screen.monster_spawner.block_any_monster_path?(clicked_row, clicked_column)
 
+      DebugHelper.string("at_monster_spawner: #{at_monster_spawner.inspect}")
+      DebugHelper.string("at_defending_city: #{at_defending_city.inspect}")
+      DebugHelper.string("at_existing_defense: #{at_existing_defense.inspect}")
+      DebugHelper.string("blocks_path: #{blocks_path.inspect}")
+      DebugHelper.string("blocks_monster: #{blocks_monster.inspect}")
+
       if at_monster_spawner or at_defending_city or at_existing_defense or blocks_path or blocks_monster
         AudioHelper.play :cant_build
       else

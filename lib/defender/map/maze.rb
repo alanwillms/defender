@@ -26,7 +26,7 @@ class Maze
   def block_all_paths?(current_row, current_column)
     matrix = MapHelper.clone_matrix(@matrix)
     matrix[current_row][current_column] = PATH_BLOCKED
-    create_solution(matrix, MonsterSpawner::ROW, MonsterSpawner::COLUMN).has_solution?
+    not create_solution(matrix, MonsterSpawner::ROW, MonsterSpawner::COLUMN).has_solution?
   end
 
   def create_solution(matrix, start_row, start_column)

@@ -7,4 +7,8 @@ class DebugHelper
     end
     puts ""
   end
+
+  def self.string(value)
+    puts value
+  end
 end
