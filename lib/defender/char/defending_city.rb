@@ -1,12 +1,8 @@
-class DefendingCity
+class DefendingCity < Building
   attr_accessor :health_points
 
-  def initialize(map)
-    @map = map
+  def initialize(map, row, column)
+    super(map, row, column)
     @health_points = 100
-  end
-
-  def draw(x, y, z)
-    SpriteHelper.image(:defending_city).draw(x, y, z)
   end
 end

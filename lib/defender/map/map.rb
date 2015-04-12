@@ -1,21 +1,38 @@
 class Map
-  attr_reader :max_width, :max_height, :maze, :rows, :columns, :last_row, :last_column, :monsters
+  attr_reader :max_width, :max_height, :rows, :columns, :last_row, :last_column, :monsters
 
   def initialize(max_width, max_height)
     @max_width = max_width
     @max_height = max_height
+
     @columns = @max_width.to_i / MapHelper.tile_size
     @rows = @max_height.to_i / MapHelper.tile_size
     @last_column = @columns - 1
     @last_row = @rows - 1
-    @maze = Maze.new(@rows, @columns)
-    @buildings = MapHelper.create_matrix(@rows, @columns)
+
+    @buildings_map = MapHelper.create_matrix(@rows, @columns)
     @monsters = []
+  end
+
+  def maze
+    @maze ||= Maze.new(self)
+  end
+
+  def buildings
+    list = []
+    @buildings_map.each do |row|
+      row.each do |building|
+        unless building.nil?
+          list.push(building)
+        end
+      end
+    end
+    list
   end
 
   def buildings_count
     counter = 0
-    @buildings.each do |row|
+    @buildings_map.each do |row|
       row.each do |cell|
         unless cell.nil?
           counter += 1
@@ -29,21 +46,20 @@ class Map
     rand(1..(@rows*@columns/3)).times do
       row, column = *random_cell
       if can_build_at?(row, column)
-        wall = Wall.new
-        build_at!(wall, row, column)
+        wall = Wall.new(self, row, column)
       end
     end
   end
 
   def build_at!(object, row, column)
-    @buildings[row][column] = object
+    @buildings_map[row][column] = object
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
       @maze.block(row, column)
     end
   end
 
   def has_element_at?(row, column)
-    @buildings[row][column].nil? == false
+    @buildings_map[row][column].nil? == false
   end
 
   def draw
@@ -54,8 +70,8 @@ class Map
 
         SpriteHelper.image(:floor).draw(x, y, ZOrder::Background)
 
-        unless @buildings[row][column].nil?
-          @buildings[row][column].draw(x, y, ZOrder::Building)
+        unless @buildings_map[row][column].nil?
+          @buildings_map[row][column].draw
         end
       end
     end
@@ -85,7 +101,7 @@ class Map
       end
 
       if can_build_at?(clicked_row, clicked_column)
-        build_at!(Defense.new, clicked_row, clicked_column)
+        Defense.new(self, clicked_row, clicked_column)
         AudioHelper.play :defense_built
       else
         AudioHelper.play :cant_build
@@ -101,7 +117,7 @@ class Map
 
     def can_build_at?(row, column)
       at_blocked_cell = has_element_at?(row, column)
-      blocks_path = @maze.block_all_paths?(row, column)
+      blocks_path = maze.block_all_paths?(row, column)
       blocks_monster = block_any_monster_path?(row, column)
 
       DebugHelper.string("at_blocked_cell: #{at_blocked_cell.inspect}")
@@ -113,11 +129,11 @@ class Map
 
     def block_any_monster_path?(row, column)
       blocks = false
-      matrix = MapHelper.clone_matrix(@maze.matrix)
+      matrix = MapHelper.clone_matrix(maze.matrix)
       matrix[row][column] = Maze::PATH_BLOCKED
       @monsters.each do |monster|
         monster_matrix = MapHelper.clone_matrix(matrix)
-        solver = @maze.create_solution(monster_matrix, monster.current_row, monster.current_column)
+        solver = maze.create_solution(monster_matrix, monster.current_row, monster.current_column)
         unless solver.has_solution?
           blocks = true
           break

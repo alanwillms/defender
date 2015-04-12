@@ -12,9 +12,8 @@ class Maze
 
   attr_reader :matrix
 
-  def initialize(rows, columns)
-    @rows = rows
-    @columns = columns
+  def initialize(map)
+    @map = map
     @matrix = create_matrix
   end
 
@@ -26,10 +25,18 @@ class Maze
     @matrix[row][column] = PATH_BLOCKED
   end
 
+  # Check if ALL monster spawners are not blocked until the exit(s)
   def block_all_paths?(current_row, current_column)
     matrix = MapHelper.clone_matrix(@matrix)
     matrix[current_row][current_column] = PATH_BLOCKED
-    not create_solution(matrix, MonsterSpawner::ROW, MonsterSpawner::COLUMN).has_solution?
+    @map.buildings.each do |building|
+      if building.is_a? MonsterSpawner
+        unless create_solution(matrix, building.row, building.column).has_solution?
+          return true
+        end
+      end
+    end
+    return false
   end
 
   def create_solution(matrix, start_row, start_column)
@@ -38,8 +45,12 @@ class Maze
 
   private
     def create_matrix
-      matrix = MapHelper.create_matrix(@rows, @columns, PATH_OPEN)
-      matrix[@rows - 1][@columns - 1] = PATH_END
+      matrix = MapHelper.create_matrix(@map.rows, @map.columns, PATH_OPEN)
+      @map.buildings.each do |building|
+        if building.is_a? DefendingCity
+          matrix[building.row][building.column] = PATH_END
+        end
+      end
       matrix
     end
 end

@@ -1,5 +1,6 @@
 require 'gosu'
 require 'defender/zorder'
+require 'defender/char/building'
 require 'defender/char/defending_city'
 require 'defender/char/defense'
 require 'defender/char/monster'

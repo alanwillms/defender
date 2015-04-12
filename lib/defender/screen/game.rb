@@ -7,10 +7,8 @@ class GameScreen < BaseScreen
     @menu = Menu.new(self, menu_width, Window.current_window.height, @map.max_width, 0)
     AudioHelper.play(:background_music, false)
 
-    @defending_city = DefendingCity.new(@map)
-    @monster_spawner = MonsterSpawner.new(@map)
-    @map.build_at!(@monster_spawner, 0, 0)
-    @map.build_at!(@defending_city, @map.last_row, @map.last_column)
+    @defending_city = DefendingCity.new(@map, @map.last_row, @map.last_column)
+    @monster_spawner = MonsterSpawner.new(@map, 0, 0)
     @map.build_random_walls
 
     @monster_spawner.spawn_wave
