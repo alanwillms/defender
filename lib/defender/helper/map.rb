@@ -32,4 +32,16 @@ class MapHelper
     end
     cloned_matrix
   end
+
+  def self.create_matrix(rows, columns, default_value = nil)
+    matrix = []
+    for row in 0...rows do
+      row_items = []
+      for column in 0...columns do
+        row_items.push default_value
+      end
+      matrix.push row_items
+    end
+    matrix
+  end
 end

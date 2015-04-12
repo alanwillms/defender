@@ -38,13 +38,7 @@ class Maze
 
   private
     def create_matrix
-      matrix = []
-      for row in 0...@rows do
-        matrix.push([])
-        for column in 0...@columns do
-          matrix[row].push(PATH_OPEN)
-        end
-      end
+      matrix = MapHelper.create_matrix(@rows, @columns, PATH_OPEN)
       matrix[@rows - 1][@columns - 1] = PATH_END
       matrix
     end

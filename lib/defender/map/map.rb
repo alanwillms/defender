@@ -9,7 +9,7 @@ class Map
     @last_column = @columns - 1
     @last_row = @rows - 1
     @maze = Maze.new(@rows, @columns)
-    @elements_matrix = create_elements_matrix
+    @buildings = MapHelper.create_matrix(@rows, @columns)
   end
 
   def build_random_walls
@@ -24,14 +24,14 @@ class Map
   end
 
   def build_at!(object, row, column)
-    @elements_matrix[row][column] = object
+    @buildings[row][column] = object
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
       @maze.block(row, column)
     end
   end
 
   def has_element_at?(row, column)
-    @elements_matrix[row][column].nil? == false
+    @buildings[row][column].nil? == false
   end
 
   def draw
@@ -42,8 +42,8 @@ class Map
 
         SpriteHelper.image(:floor).draw(x, y, ZOrder::Background)
 
-        unless @elements_matrix[row][column].nil?
-          @elements_matrix[row][column].draw(x, y, ZOrder::Building)
+        unless @buildings[row][column].nil?
+          @buildings[row][column].draw(x, y, ZOrder::Building)
         end
       end
     end
@@ -82,17 +82,6 @@ class Map
   end
 
   private
-    def create_elements_matrix
-      matrix = []
-      for column in 0...@columns do
-        matrix_row = []
-        for row in 0...@rows do
-          matrix_row.push(nil)
-        end
-        matrix.push matrix_row
-      end
-      matrix
-    end
 
     def random_cell
       [rand(0..@last_row), rand(0..@last_column)]
@@ -101,7 +90,7 @@ class Map
     def can_build_at?(row, column)
       at_blocked_cell = has_element_at?(row, column)
       blocks_path = @maze.block_all_paths?(row, column)
-      blocks_monster = (Window.current_window.current_screen.nil? == false and monster_spawner.block_any_monster_path?(row, column))
+      blocks_monster = (Window.current_window.current_screen.nil? == false and Window.current_window.current_screen.monster_spawner.block_any_monster_path?(row, column))
 
       DebugHelper.string("at_blocked_cell: #{at_blocked_cell.inspect}")
       DebugHelper.string("blocks_path: #{blocks_path.inspect}")
