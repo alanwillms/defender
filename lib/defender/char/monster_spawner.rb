@@ -7,9 +7,6 @@ class MonsterSpawner
     @map = map
     @monsters = Array.new
     @wave = 1
-    @x = MapHelper.get_x_for_column(COLUMN)
-    @y = MapHelper.get_y_for_row(ROW)
-    @z = ZOrder::Building
   end
 
   def spawn_wave
@@ -27,8 +24,8 @@ class MonsterSpawner
     end
   end
 
-  def draw
-    SpriteHelper.image(:monster_spawner).draw(@x, @y, @z)
+  def draw(x, y, z)
+    SpriteHelper.image(:monster_spawner).draw(x, y, z)
   end
 
   def block_any_monster_path?(row, column)

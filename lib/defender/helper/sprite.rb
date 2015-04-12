@@ -17,6 +17,8 @@ class SpriteHelper
         source = "media/images/grass.png"
       when :defense
         source = "media/images/defense.png"
+      when :wall
+        source = "media/images/wall.png"
     end
 
     if @@images[source.to_sym].nil?

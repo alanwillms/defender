@@ -5,11 +5,14 @@ class GameScreen < BaseScreen
     menu_width = 5 * 32
     @map = Map.new(Window.current_window.width - menu_width, Window.current_window.height)
     @menu = Menu.new(self, menu_width, Window.current_window.height, @map.max_width, 0)
-
     AudioHelper.play(:background_music, false)
 
     @defending_city = DefendingCity.new(@map)
     @monster_spawner = MonsterSpawner.new(@map)
+    @map.build_at!(@monster_spawner, 0, 0)
+    @map.build_at!(@defending_city, @map.last_row, @map.last_column)
+    @map.build_random_walls
+
     @monster_spawner.spawn_wave
   end
 
@@ -32,8 +35,6 @@ class GameScreen < BaseScreen
   def draw
     @map.draw
     @menu.draw
-    @defending_city.draw
-    @monster_spawner.draw
     @monster_spawner.monsters.each do |monster|
       monster.draw
     end

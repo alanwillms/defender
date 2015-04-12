@@ -9,6 +9,29 @@ class Map
     @last_column = @columns - 1
     @last_row = @rows - 1
     @maze = Maze.new(@rows, @columns)
+    @elements_matrix = create_elements_matrix
+  end
+
+  def build_random_walls
+    # Random walls
+    rand(1..(@rows*@columns/3)).times do
+      row, column = *random_cell
+      if can_build_at?(row, column)
+        wall = Wall.new
+        build_at!(wall, row, column)
+      end
+    end
+  end
+
+  def build_at!(object, row, column)
+    @elements_matrix[row][column] = object
+    unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
+      @maze.block(row, column)
+    end
+  end
+
+  def has_element_at?(row, column)
+    @elements_matrix[row][column].nil? == false
   end
 
   def draw
@@ -16,17 +39,11 @@ class Map
       for row in 0...@rows do
         x = MapHelper.get_x_for_column(column)
         y = MapHelper.get_y_for_row(row)
-        z = ZOrder::Background
 
-        SpriteHelper.image(:floor).draw(x, y, z)
+        SpriteHelper.image(:floor).draw(x, y, ZOrder::Background)
 
-        # Defense
-        if @maze.matrix[row][column] == Maze::PATH_BLOCKED
-          x = MapHelper.get_x_for_column(column)
-          y = MapHelper.get_y_for_row(row)
-          z = ZOrder::Building
-
-          SpriteHelper.image(:defense).draw(x, y, z)
+        unless @elements_matrix[row][column].nil?
+          @elements_matrix[row][column].draw(x, y, ZOrder::Building)
         end
       end
     end
@@ -55,24 +72,41 @@ class Map
         return
       end
 
-      at_monster_spawner = (clicked_row == 0 and clicked_column == 0)
-      at_defending_city = (clicked_row == @last_row and clicked_column == @last_column)
-      at_existing_defense = (@maze.matrix[clicked_row][clicked_column] == Maze::PATH_BLOCKED)
-      blocks_path = @maze.block_all_paths?(clicked_row, clicked_column)
-      blocks_monster = Window.current_window.current_screen.monster_spawner.block_any_monster_path?(clicked_row, clicked_column)
-
-      DebugHelper.string("at_monster_spawner: #{at_monster_spawner.inspect}")
-      DebugHelper.string("at_defending_city: #{at_defending_city.inspect}")
-      DebugHelper.string("at_existing_defense: #{at_existing_defense.inspect}")
-      DebugHelper.string("blocks_path: #{blocks_path.inspect}")
-      DebugHelper.string("blocks_monster: #{blocks_monster.inspect}")
-
-      if at_monster_spawner or at_defending_city or at_existing_defense or blocks_path or blocks_monster
-        AudioHelper.play :cant_build
-      else
-        @maze.block(clicked_row, clicked_column)
+      if can_build_at?(clicked_row, clicked_column)
+        build_at!(Defense.new, clicked_row, clicked_column)
         AudioHelper.play :defense_built
+      else
+        AudioHelper.play :cant_build
       end
     end
   end
+
+  private
+    def create_elements_matrix
+      matrix = []
+      for column in 0...@columns do
+        matrix_row = []
+        for row in 0...@rows do
+          matrix_row.push(nil)
+        end
+        matrix.push matrix_row
+      end
+      matrix
+    end
+
+    def random_cell
+      [rand(0..@last_row), rand(0..@last_column)]
+    end
+
+    def can_build_at?(row, column)
+      at_blocked_cell = has_element_at?(row, column)
+      blocks_path = @maze.block_all_paths?(row, column)
+      blocks_monster = (Window.current_window.current_screen.nil? == false and monster_spawner.block_any_monster_path?(row, column))
+
+      DebugHelper.string("at_blocked_cell: #{at_blocked_cell.inspect}")
+      DebugHelper.string("blocks_path: #{blocks_path.inspect}")
+      DebugHelper.string("blocks_monster: #{blocks_monster.inspect}")
+
+      not (at_blocked_cell or blocks_path or blocks_monster)
+    end
 end

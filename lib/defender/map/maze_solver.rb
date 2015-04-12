@@ -3,7 +3,6 @@ class MazeSolver
     @matrix = matrix
     @starting_row = starting_row
     @starting_column = starting_column
-    # @matrix[@starting_row][@starting_column] = Maze::PATH_START
     @rows = @matrix.size
     @columns = @matrix[0].size
   end
