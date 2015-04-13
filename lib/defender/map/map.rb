@@ -1,7 +1,8 @@
 class Map
-  attr_reader :max_width, :max_height, :rows, :columns, :last_row, :last_column, :monsters
+  attr_reader :max_width, :max_height, :rows, :columns, :last_row, :last_column, :monsters, :screen
 
-  def initialize(max_width, max_height)
+  def initialize(screen, max_width, max_height)
+    @screen = screen
     @max_width = max_width
     @max_height = max_height
 
@@ -86,6 +87,7 @@ class Map
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
       maze.block(row, column)
     end
+    @screen.money = @screen.money - object.class.build_cost
   end
 
   def has_element_at?(row, column)
@@ -130,7 +132,7 @@ class Map
         return
       end
 
-      if can_build_at?(clicked_row, clicked_column)
+      if can_pay_for? Defense.build_cost and can_build_at?(clicked_row, clicked_column)
         Defense.new(self, clicked_row, clicked_column)
         AudioHelper.play :defense_built
       else
@@ -143,6 +145,10 @@ class Map
 
     def random_cell
       [rand(0..@last_row), rand(0..@last_column)]
+    end
+
+    def can_pay_for?(cost)
+      cost <= @screen.money
     end
 
     def can_build_at?(row, column)

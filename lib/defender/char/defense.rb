@@ -7,6 +7,10 @@ class Defense < Building
     @attack = 12
   end
 
+  def self.build_cost
+    100
+  end
+
   def monster_at_range?(monster)
     distance = MapHelper.euclidean_distance(center, monster.center)
     distance_in_tiles = distance / MapHelper.tile_size

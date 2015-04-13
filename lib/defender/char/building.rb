@@ -1,4 +1,5 @@
 class Building
+
   attr_reader :row, :column
 
   def initialize(map, row, column)
@@ -6,6 +7,10 @@ class Building
     @row = row
     @column = column
     @map.build_at!(self, @row, @column)
+  end
+
+  def self.build_cost
+    0
   end
 
   def draw

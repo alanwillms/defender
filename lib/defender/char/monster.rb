@@ -5,7 +5,7 @@ class Monster
   SPRITE_UP_POSITION = 2
   SPRITE_LEFT_POSITION = 3
 
-  attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points
+  attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points, :money_loot
   attr_accessor :health_points
 
   def initialize(maze, speed)
@@ -17,6 +17,7 @@ class Monster
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
     @last_maze_matrix = nil
+    @money_loot = rand(25..100)
   end
 
   def warp(row, column)
