@@ -78,16 +78,20 @@ class Map
       row, column = *random_cell
       if can_build_at?(row, column)
         wall = Wall.new(self, row, column)
+        build(wall, row, column)
       end
     end
   end
 
-  def build_at!(object, row, column)
+  def build(object, row, column)
     @buildings_map[row][column] = object
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
       maze.block(row, column)
     end
-    @screen.money = @screen.money - object.class.build_cost
+  end
+
+  def pay(cost)
+    @screen.money = @screen.money - cost
   end
 
   def has_element_at?(row, column)
@@ -171,8 +175,12 @@ class Map
         return
       end
 
-      if can_pay_for? Defense.build_cost and can_build_at?(clicked_row, clicked_column)
-        Defense.new(self, clicked_row, clicked_column)
+      defense_type = @screen.menu.selected_item.defense_type
+      defense = Defense.new(self, clicked_row, clicked_column, defense_type)
+
+      if can_pay_for? defense.cost and can_build_at?(clicked_row, clicked_column)
+        build(defense, clicked_row, clicked_column)
+        pay(defense.cost)
         AudioHelper.play :defense_built
       else
         AudioHelper.play :cant_build

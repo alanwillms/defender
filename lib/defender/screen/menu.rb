@@ -1,4 +1,6 @@
 class Menu
+  attr_reader :selected_item
+
   def initialize(screen, width, height, x, y)
     @screen = screen
     @padding = MapHelper.tile_size / 2
@@ -14,10 +16,21 @@ class Menu
     @selected_item = nil
   end
 
-  def add_item(image_identifier, callback)
-    item = MenuItem.new(image_identifier, @items_x, @items_y, ZOrder::UI, callback)
+  def add_item(defense_type, callback)
+    item = MenuItem.new(defense_type, @items_x, @items_y, ZOrder::UI, callback)
     @items << item
     increase_items_x
+    if @selected_item.nil?
+      select_item item
+    end
+  end
+
+  def select_item(item)
+    @items.each do |other_item|
+      other_item.selected = false
+    end
+    @selected_item = item
+    item.selected = true
   end
 
   def update
@@ -28,10 +41,8 @@ class Menu
 
   def clicked
     @items.each do |item|
-      item.selected = false
       if item.clicked
-        @selected_item = item
-        item.selected = true
+        select_item(item)
       end
     end
   end
@@ -72,10 +83,12 @@ end
 class MenuItem
   HOVER_OFFSET = 3
 
+  attr_reader :defense_type
   attr_accessor :selected
 
-  def initialize (identifier, x, y, z, callback)
-    @main_image = SpriteHelper.image(identifier)
+  def initialize (defense_type, x, y, z, callback)
+    @defense_type = defense_type
+    @main_image = SpriteHelper.image(defense_type)
     @hover_image = @main_image
     @original_x = @x = x
     @original_y = @y = y

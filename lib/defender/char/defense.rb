@@ -1,15 +1,9 @@
 class Defense < Building
   COOL_DOWN_MILISECONDS = 1000
 
-  def initialize(map, row, column)
-    super(map, row, column, :cannon)
-    @range = 4
+  def initialize(map, row, column, type)
+    super(map, row, column, type)
     @last_shot_at = nil
-    @attack = 12
-  end
-
-  def self.build_cost
-    100
   end
 
   def monster_at_range?(monster)

@@ -1,7 +1,7 @@
 class GameScreen < BaseScreen
   MENU_WIDTH = 160
 
-  attr_reader :window, :defending_city, :monster_spawner, :map
+  attr_reader :window, :defending_city, :monster_spawner, :map, :menu
   attr_accessor :money
 
   def initialize
@@ -9,10 +9,13 @@ class GameScreen < BaseScreen
     @map = Map.new(self, Window.current_window.width - MENU_WIDTH, Window.current_window.height)
     @menu = Menu.new(self, MENU_WIDTH, Window.current_window.height, @map.max_width, 0)
 
-    DefendingCity.new(@map, @map.last_row, @map.last_column)
-    MonsterSpawner.new(@map, 0, 0).spawn_wave
+    defending_city = DefendingCity.new(@map, @map.last_row, @map.last_column)
+    monster_spawner = MonsterSpawner.new(@map, 0, 0)
 
+    @map.build(defending_city, @map.last_row, @map.last_column)
+    @map.build(monster_spawner, 0, 0)
     @map.build_random_walls
+    monster_spawner.spawn_wave
 
     Building.types.keys.each do |building_type|
       puts building_type.inspect
