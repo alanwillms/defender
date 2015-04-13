@@ -19,6 +19,10 @@ class Defense < Building
 
   def shoot!(monster)
     monster.health_points -= @attack
+    if monster.health_points < 0
+      monster.health_points = 0
+    end
+    DebugHelper.string("Monster: #{monster.health_points} / #{monster.initial_health_points}")
     @last_shot_at = Gosu::milliseconds
   end
 

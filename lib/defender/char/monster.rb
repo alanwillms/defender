@@ -5,14 +5,14 @@ class Monster
   SPRITE_UP_POSITION = 2
   SPRITE_LEFT_POSITION = 3
 
-  attr_reader :x, :y, :maze_solver, :current_row, :current_column
+  attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points
   attr_accessor :health_points
 
   def initialize(maze, speed)
     @maze = maze
     @speed = speed
     @attack = 1
-    @health_points = 50
+    @health_points = @initial_health_points = 50
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
@@ -45,6 +45,7 @@ class Monster
   def draw
     img = SpriteHelper.tiles(:monster)[current_sprite] # @animation.size
     img.draw(@x, @y, ZOrder::Character, 1, 1)
+    HealthBarHelper.draw(@health_points, @initial_health_points, @x, @y)
   end
 
   def center

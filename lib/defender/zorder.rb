@@ -1,3 +1,3 @@
 module ZOrder
-  Background, Building, Character, UI = *0..3
+  Background, Building, Character, HealthBarBg, HealthBar, UI = *0..5
 end
