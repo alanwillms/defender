@@ -13,6 +13,10 @@ class AudioHelper
         source = "media/audio/sfx/error.wav"
       when :game_over
         source = "media/audio/music/we_are_all_under_the_stars.ogg"
+      when :defense_shot
+        source = "media/audio/sfx/defense_shot.wav"
+      when :monster_death
+        source = "media/audio/sfx/monster_death.wav"
     end
 
     if source

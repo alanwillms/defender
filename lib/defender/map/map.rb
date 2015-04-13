@@ -48,6 +48,10 @@ class Map
     buildings.find_all { |building| building.is_a? MonsterSpawner }
   end
 
+  def defenses
+    buildings.find_all { |building| building.is_a? Defense }
+  end
+
   def health_points
     hp = 0
     defending_cities.each do |building|

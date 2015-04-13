@@ -8,10 +8,7 @@ class GameScreen < BaseScreen
     AudioHelper.play(:background_music, false)
 
     DefendingCity.new(@map, @map.last_row, @map.last_column)
-    DefendingCity.new(@map, @map.last_row - 3, @map.last_column - 4)
-    DefendingCity.new(@map, @map.last_row, 0)
     MonsterSpawner.new(@map, 0, 0).spawn_wave
-    MonsterSpawner.new(@map, 0, @map.last_column).spawn_wave
 
     @map.build_random_walls
   end
@@ -28,6 +25,17 @@ class GameScreen < BaseScreen
           AudioHelper.play(:monster_attack)
           if defending_city.health_points <= 0
             @map.maze.block(defending_city.row, defending_city.column)
+          end
+        end
+      end
+
+      @map.defenses.each do |defense|
+        if defense.cooled_down? and defense.monster_at_range?(monster)
+          defense.shoot! monster
+          AudioHelper.play(:defense_shot)
+          if monster.health_points <= 0
+            @map.unspawn_monster monster
+            AudioHelper.play(:monster_death)
           end
         end
       end

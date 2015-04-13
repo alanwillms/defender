@@ -6,11 +6,13 @@ class Monster
   SPRITE_LEFT_POSITION = 3
 
   attr_reader :x, :y, :maze_solver, :current_row, :current_column
+  attr_accessor :health_points
 
   def initialize(maze, speed)
     @maze = maze
     @speed = speed
-    @attack = 10
+    @attack = 1
+    @health_points = 50
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
@@ -43,6 +45,11 @@ class Monster
   def draw
     img = SpriteHelper.tiles(:monster)[current_sprite] # @animation.size
     img.draw(@x, @y, ZOrder::Character, 1, 1)
+  end
+
+  def center
+    half_tile = MapHelper.tile_size / 2
+    [@x + half_tile, @y + half_tile]
   end
 
   private
