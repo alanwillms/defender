@@ -11,6 +11,7 @@ class Menu
     @items_y = @y + @padding + (5 * MapHelper.tile_size)
     @texts_x = @x + @padding
     @texts_y = @y + @padding
+    @selected_item = nil
   end
 
   def add_item(image_identifier, callback)
@@ -27,7 +28,11 @@ class Menu
 
   def clicked
     @items.each do |item|
-      item.clicked
+      item.selected = false
+      if item.clicked
+        @selected_item = item
+        item.selected = true
+      end
     end
   end
 
@@ -66,6 +71,9 @@ end
 
 class MenuItem
   HOVER_OFFSET = 3
+
+  attr_accessor :selected
+
   def initialize (identifier, x, y, z, callback)
     @main_image = SpriteHelper.image(identifier)
     @hover_image = @main_image
@@ -74,9 +82,20 @@ class MenuItem
     @z = z
     @callback = callback
     @active_image = @main_image
+    @selected = false
   end
 
   def draw
+    if @selected
+      color = 0xff4caf50
+      Window.current_window.draw_quad(
+        @x, @y, color,
+        @x + @active_image.width, @y, color,
+        @x, @y + @active_image.height, color,
+        @x + @active_image.width, @y + @active_image.height, color,
+        @z
+      )
+    end
     @active_image.draw(@x, @y, @z)
   end
 
@@ -105,6 +124,9 @@ class MenuItem
   def clicked
     if is_mouse_hovering then
       @callback.call
+      true
+    else
+      false
     end
   end
 end
