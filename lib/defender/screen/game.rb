@@ -1,13 +1,11 @@
 class GameScreen < BaseScreen
-  MENU_WIDTH = 160
-
   attr_reader :window, :defending_city, :monster_spawner, :map, :menu
   attr_accessor :money
 
   def initialize
     @money = 300
-    @map = Map.new(self, Window.current_window.width - MENU_WIDTH, Window.current_window.height)
-    @menu = Menu.new(self, MENU_WIDTH, Window.current_window.height, @map.max_width, 0)
+    @map = Map.new(self, inner_width - menu_width, inner_height)
+    @menu = Menu.new(self, menu_width, inner_height, inner_width - menu_width + screen_padding, screen_padding)
 
     defending_city = DefendingCity.new(@map, @map.last_row, @map.last_column)
     monster_spawner = MonsterSpawner.new(@map, 0, 0)
@@ -41,4 +39,30 @@ class GameScreen < BaseScreen
       @menu.clicked
     end
   end
+
+  private
+
+    def menu_width
+      @menu_width ||= 5 * MapHelper.tile_size
+    end
+
+    def screen_padding
+      MapHelper.screen_padding
+    end
+
+    def screen_width
+      Window.current_window.width
+    end
+
+    def screen_height
+      Window.current_window.height
+    end
+
+    def inner_height
+      screen_height - (screen_padding * 2)
+    end
+
+    def inner_width
+      screen_width - (screen_padding * 2)
+    end
 end

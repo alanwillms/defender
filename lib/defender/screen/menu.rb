@@ -3,16 +3,15 @@ class Menu
 
   def initialize(screen, width, height, x, y)
     @screen = screen
-    @padding = MapHelper.tile_size / 2
-    @x = @items_x = x
+    @x = @items_x = (x + MapHelper.screen_padding)
     @y = @items_y = y
     @width = width
     @height = height
     @items = []
-    @items_x = @x + @padding
-    @items_y = @y + @padding + (5 * MapHelper.tile_size)
-    @texts_x = @x + @padding
-    @texts_y = @y + @padding
+    @items_x = @x
+    @items_y = @y + (5 * MapHelper.tile_size)
+    @texts_x = @x
+    @texts_y = @y
     @selected_item = nil
   end
 
@@ -48,7 +47,7 @@ class Menu
   end
 
   def draw
-    @texts_y = @y + @padding
+    @texts_y = @y
     write "Defender"
     write "Money = #{@screen.money}"
     write "HP = #{@screen.map.health_points}"
@@ -68,8 +67,8 @@ class Menu
     def increase_items_x
       @items_x += MapHelper.tile_size
 
-      if @items_x > (@x + @width - MapHelper.tile_size - @padding)
-        @items_x = @x + @padding
+      if @items_x > (@x + @width - MapHelper.tile_size - MapHelper.screen_padding)
+        @items_x = @x
         increase_items_y
       end
     end

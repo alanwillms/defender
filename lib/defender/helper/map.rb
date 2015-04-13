@@ -1,20 +1,24 @@
 class MapHelper
   @@tile_size = nil
 
+  def self.screen_padding
+    tile_size
+  end
+
   def self.get_x_for_column(column)
-    column * tile_size
+    screen_padding + (column * tile_size)
   end
 
   def self.get_y_for_row(row)
-    row * tile_size
+    screen_padding + (row * tile_size)
   end
 
   def self.get_column_for_x(x)
-    x / tile_size
+    (x - screen_padding) / tile_size
   end
 
   def self.get_row_for_y(y)
-    y / tile_size
+    (y - screen_padding) / tile_size
   end
 
   def self.tile_size
