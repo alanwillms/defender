@@ -1,9 +1,9 @@
 class Monster
   SPRITE_FRAMES_COUNT = 3
   SPRITE_DOWN_POSITION = 0
-  SPRITE_RIGHT_POSITION = 1
-  SPRITE_UP_POSITION = 2
-  SPRITE_LEFT_POSITION = 3
+  SPRITE_RIGHT_POSITION = 2
+  SPRITE_UP_POSITION = 3
+  SPRITE_LEFT_POSITION = 1
 
   attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points, :money_loot
   attr_accessor :health_points
@@ -11,7 +11,7 @@ class Monster
   def initialize(maze, type)
     @maze = maze
     @type = type
-    # @facing = SPRITE_RIGHT_POSITION
+    @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
     @last_maze_matrix = nil
@@ -42,9 +42,10 @@ class Monster
   end
 
   def draw
-    img = SpriteHelper.tiles(:monster)[current_sprite]
-    img.draw(@x, @y, ZOrder::Character, 1, 1)
-    HealthBar.new(@health_points, @initial_health_points, @x, @y).draw
+    identifier = 'monster_' + @type.to_s
+    img = SpriteHelper.tiles(identifier.to_sym)[current_sprite]
+    img.draw(@x, @y - 16, ZOrder::Character, 1, 1)
+    HealthBar.new(@health_points, @initial_health_points, @x, @y - 16).draw
   end
 
   def center
@@ -64,7 +65,7 @@ class Monster
       @health_points = @initial_health_points = types[@type][:life]
       @attack = types[@type][:damage]
       @shield = types[@type][:shield]
-      @money_loot = types[@type][:money]
+      @money_loot = types[@type][:money] || 0
     end
 
     def self.types

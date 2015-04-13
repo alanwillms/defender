@@ -36,15 +36,29 @@ class SpriteHelper
 
   def self.tiles(identifier)
     source = nil
-    tile_width = nil
-    tile_height = nil
+    tile_width = 32
+    tile_height = 48
     tileable = false
 
     case identifier
-      when :monster
-        source = "media/images/monster_sprite.png"
-        tile_width = 32
-        tile_height = 32
+      when :monster_weak_1
+        source = "media/images/weak_1.png"
+      when :monster_weak_2
+        source = "media/images/weak_2.png"
+      when :monster_quick_1
+        source = "media/images/quick_1.png"
+      when :monster_big_hp
+        source = "media/images/big_hp.png"
+      when :monster_big_shield
+        source = "media/images/big_shield.png"
+      when :monster_big_damage
+        source = "media/images/big_damage.png"
+      when :monster_quick_big_hp
+        source = "media/images/quick_big_hp.png"
+      when :monster_quick_2
+        source = "media/images/quick_2.png"
+      when :monster_big_hp_shield
+        source = "media/images/big_hp_shield.png"
     end
 
     if @@tilesets[source.to_sym].nil?
