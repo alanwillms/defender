@@ -15,7 +15,7 @@ class SpriteHelper
         source = "media/images/defending_city.png"
       when :floor
         source = "media/images/grass.png"
-      when :defense
+      when :cannon
         source = "media/images/defense.png"
       when :wall
         source = "media/images/wall.png"

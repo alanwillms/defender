@@ -1,8 +1,9 @@
 class Defense < Building
+  COOL_DOWN_MILISECONDS = 1000
+
   def initialize(map, row, column)
-    super(map, row, column)
+    super(map, row, column, :cannon)
     @range = 4
-    @cool_down_miliseconds = 3000
     @last_shot_at = nil
     @attack = 12
   end
@@ -18,7 +19,7 @@ class Defense < Building
   end
 
   def cooled_down?
-    @last_shot_at.nil? or (@last_shot_at + @cool_down_miliseconds) < Gosu::milliseconds
+    @last_shot_at.nil? or (@last_shot_at + COOL_DOWN_MILISECONDS) < Gosu::milliseconds
   end
 
   def shoot!(monster)

@@ -2,7 +2,7 @@ class MonsterSpawner < Building
   attr_reader :monsters, :map
 
   def initialize(map, row, column)
-    super(map, row, column)
+    super(map, row, column, :monster_spawner)
     @wave = 1
   end
 

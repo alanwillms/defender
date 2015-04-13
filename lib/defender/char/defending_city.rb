@@ -2,7 +2,7 @@ class DefendingCity < Building
   attr_accessor :health_points, :initial_health_points
 
   def initialize(map, row, column)
-    super(map, row, column)
+    super(map, row, column, :defending_city)
     @health_points = @initial_health_points = 100
   end
 
