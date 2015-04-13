@@ -107,6 +107,9 @@ class Map
         end
       end
     end
+    @monsters.each do |monster|
+      monster.draw
+    end
   end
 
   def monster_at_defending_city?(monster)
@@ -115,7 +118,43 @@ class Map
     monster_row == @last_row and monster_column == @last_column
   end
 
-  def on_click(mouse_x, mouse_y)
+  def update
+    @monsters.each do |monster|
+      monster.find_target
+      monster.move
+
+      defending_cities.each do |defending_city|
+        if defending_city.monster_arrived?(monster)
+          monster.attack! defending_city
+          unspawn_monster monster
+          AudioHelper.play(:monster_attack)
+          if defending_city.health_points <= 0
+            @maze.block(defending_city.row, defending_city.column)
+          end
+        end
+      end
+
+      defenses.each do |defense|
+        if defense.cooled_down? and defense.monster_at_range?(monster)
+          defense.shoot! monster
+          AudioHelper.play(:defense_shot)
+          if monster.health_points <= 0
+            unspawn_monster monster
+            @screen.money += monster.money_loot
+            AudioHelper.play(:monster_death)
+          end
+        end
+      end
+    end
+
+    if health_points <= 0
+      return Window.current_window.current_screen = GameOverScreen.new
+    end
+  end
+
+  def clicked
+    mouse_x = Window.current_window.mouse_x
+    mouse_y = Window.current_window.mouse_y
     x1 = 0
     x2 = MapHelper.get_x_for_column(@last_column) + MapHelper.tile_size
     y1 = 0
