@@ -9,9 +9,6 @@ class Building
   end
 
   def draw
-    x = MapHelper.get_x_for_column(@column)
-    y = MapHelper.get_y_for_row(@row)
-    z = ZOrder::Building
     SpriteHelper.image(sprite_name.to_sym).draw(x, y, z)
   end
 
@@ -22,5 +19,17 @@ class Building
       gsub(/([a-z\d])([A-Z])/,'\1_\2').
       tr("-", "_").
       downcase
+    end
+
+    def x
+      MapHelper.get_x_for_column(@column)
+    end
+
+    def y
+      MapHelper.get_y_for_row(@row)
+    end
+
+    def z
+      ZOrder::Building
     end
 end

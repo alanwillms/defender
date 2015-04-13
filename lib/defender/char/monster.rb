@@ -43,9 +43,9 @@ class Monster
   end
 
   def draw
-    img = SpriteHelper.tiles(:monster)[current_sprite] # @animation.size
+    img = SpriteHelper.tiles(:monster)[current_sprite]
     img.draw(@x, @y, ZOrder::Character, 1, 1)
-    HealthBarHelper.draw(@health_points, @initial_health_points, @x, @y)
+    HealthBar.new(@health_points, @initial_health_points, @x, @y).draw
   end
 
   def center
