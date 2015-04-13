@@ -13,14 +13,6 @@ class MonsterSpawner < Building
     @wave += 1
   end
 
-  def unspawn(monster)
-    @map.monsters.delete monster
-
-    if @map.monsters.empty?
-      spawn_wave
-    end
-  end
-
   private
 
     def spawn

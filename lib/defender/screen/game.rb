@@ -7,26 +7,34 @@ class GameScreen < BaseScreen
     @menu = Menu.new(self, menu_width, Window.current_window.height, @map.max_width, 0)
     AudioHelper.play(:background_music, false)
 
-    @defending_city = DefendingCity.new(@map, @map.last_row, @map.last_column)
-    @monster_spawner = MonsterSpawner.new(@map, 0, 0)
-    @map.build_random_walls
+    DefendingCity.new(@map, @map.last_row, @map.last_column)
+    DefendingCity.new(@map, @map.last_row - 3, @map.last_column - 4)
+    DefendingCity.new(@map, @map.last_row, 0)
+    MonsterSpawner.new(@map, 0, 0).spawn_wave
+    MonsterSpawner.new(@map, 0, @map.last_column).spawn_wave
 
-    @monster_spawner.spawn_wave
+    @map.build_random_walls
   end
 
   def update
-    @map.monsters.each_with_index do |monster, index|
+    @map.monsters.each do |monster|
       monster.find_target
       monster.move
-      if @map.monster_at_defending_city?(monster)
-        monster.attack!(@defending_city)
-        @monster_spawner.unspawn(monster)
-        AudioHelper.play(:monster_attack)
 
-        if @defending_city.health_points <= 0
-          return Window.current_window.current_screen = GameOverScreen.new
+      @map.defending_cities.each do |defending_city|
+        if defending_city.monster_arrived?(monster)
+          monster.attack! defending_city
+          @map.unspawn_monster monster
+          AudioHelper.play(:monster_attack)
+          if defending_city.health_points <= 0
+            @map.maze.block(defending_city.row, defending_city.column)
+          end
         end
       end
+    end
+
+    if @map.health_points <= 0
+      return Window.current_window.current_screen = GameOverScreen.new
     end
   end
 
@@ -56,7 +64,7 @@ class Menu
 
   def draw
     SpriteHelper.font.draw("Defender", @x + 32, @y + 32, ZOrder::UI)
-    SpriteHelper.font.draw("HP = #{@screen.defending_city.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
+    SpriteHelper.font.draw("HP = #{@screen.map.health_points}", @x + 32, @y + (32 * 2), ZOrder::UI)
     SpriteHelper.font.draw("Buildings = #{@screen.map.buildings_count}", @x + 32, @y + (32 * 3), ZOrder::UI)
     SpriteHelper.font.draw("Monsters = #{@screen.map.monsters.size}", @x + 32, @y + (32 * 4), ZOrder::UI)
     SpriteHelper.image(:defense_button).draw(@x + 32, @y + (32 * 5), ZOrder::UI)

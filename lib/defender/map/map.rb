@@ -18,6 +18,16 @@ class Map
     @maze ||= Maze.new(self)
   end
 
+  def unspawn_monster(monster)
+    @monsters.delete monster
+
+    if @monsters.empty?
+      monster_spawners.each do |monster_spawner|
+        monster_spawner.spawn_wave
+      end
+    end
+  end
+
   def buildings
     list = []
     @buildings_map.each do |row|
@@ -28,6 +38,22 @@ class Map
       end
     end
     list
+  end
+
+  def defending_cities
+    buildings.find_all { |building| building.is_a? DefendingCity }
+  end
+
+  def monster_spawners
+    buildings.find_all { |building| building.is_a? MonsterSpawner }
+  end
+
+  def health_points
+    hp = 0
+    defending_cities.each do |building|
+      hp += building.health_points
+    end
+    hp
   end
 
   def buildings_count
@@ -43,7 +69,7 @@ class Map
   end
 
   def build_random_walls
-    rand(1..(@rows*@columns/3)).times do
+    rand(1..(@rows*@columns/5)).times do
       row, column = *random_cell
       if can_build_at?(row, column)
         wall = Wall.new(self, row, column)
@@ -54,7 +80,7 @@ class Map
   def build_at!(object, row, column)
     @buildings_map[row][column] = object
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
-      @maze.block(row, column)
+      maze.block(row, column)
     end
   end
 

@@ -5,5 +5,6 @@ class Defense < Building
   end
 
   def at_range?(monster)
+    puts 'monster at range'
   end
 end
