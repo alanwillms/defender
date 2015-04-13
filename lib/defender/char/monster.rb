@@ -8,16 +8,14 @@ class Monster
   attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points, :money_loot
   attr_accessor :health_points
 
-  def initialize(maze, speed)
+  def initialize(maze, type)
     @maze = maze
-    @speed = speed
-    @attack = 1
-    @health_points = @initial_health_points = 50
-    @facing = SPRITE_RIGHT_POSITION
+    @type = type
+    # @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
     @last_maze_matrix = nil
-    @money_loot = rand(25..100)
+    setup_attributes
   end
 
   def warp(row, column)
@@ -54,7 +52,90 @@ class Monster
     [@x + half_tile, @y + half_tile]
   end
 
+  def self.random_type
+    types.keys.sample
+  end
+
   private
+
+    def setup_attributes
+      types = self.class.types
+      @speed = rand(types[@type][:speed]..types[@type][:max_speed]) / 5
+      @health_points = @initial_health_points = types[@type][:life]
+      @attack = types[@type][:damage]
+      @shield = types[@type][:shield]
+      @money_loot = types[@type][:money]
+    end
+
+    def self.types
+      {
+        weak_1: {
+          speed: 3,
+          max_speed: 10,
+          life: 50,
+          damage: 1,
+          shield: 0,
+          money: 5
+        },
+        weak_2: {
+          speed: 6,
+          max_speed: 20,
+          life: 50,
+          damage: 2,
+          shield: 1
+        },
+        quick_1: {
+          speed: 12,
+          max_speed: 30,
+          life: 50,
+          damage: 3,
+          shield: 1
+        },
+        big_hp: {
+          speed: 5,
+          max_speed: 10,
+          life: 500,
+          damage: 3,
+          shield: 1
+        },
+        big_shield: {
+          speed: 5,
+          max_speed: 10,
+          life: 50,
+          damage: 3,
+          shield: 20
+        },
+        big_damage: {
+          speed: 7,
+          max_speed: 14,
+          life: 50,
+          damage: 10,
+          shield: 2
+        },
+        quick_big_hp: {
+          speed: 15,
+          max_speed: 30,
+          life: 100,
+          damage: 3,
+          shield: 3
+        },
+        quick_2: {
+          speed: 30,
+          max_speed: 40,
+          life: 30,
+          damage: 4,
+          shield: 1
+        },
+        big_hp_shield: {
+          speed: 3,
+          max_speed: 10,
+          life: 300,
+          damage: 5,
+          shield: 15
+        }
+      }
+    end
+
     def maze_changed?
       current_maze_matrix = @maze.matrix.inspect.to_sym
       if @last_maze_matrix.nil? or @last_maze_matrix != current_maze_matrix
