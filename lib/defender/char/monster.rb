@@ -8,9 +8,9 @@ class Monster
   attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points, :money_loot
   attr_accessor :health_points
 
-  def initialize(maze, type)
+  def initialize(maze, type = nil)
     @maze = maze
-    @type = type
+    @type = type || random_type
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
     @maze_solver = update_maze_solver
@@ -53,11 +53,11 @@ class Monster
     [@x + half_tile, @y + half_tile]
   end
 
-  def self.random_type
-    types.keys.sample
-  end
-
   private
+
+    def random_type
+      self.class.types.keys.sample
+    end
 
     def setup_attributes
       types = self.class.types
