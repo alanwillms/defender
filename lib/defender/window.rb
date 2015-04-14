@@ -9,7 +9,7 @@ class Window < Gosu::Window
 
   def initialize
     # width, height, fullscreen, update_interval (16.666666)
-    super(960, 540, false)
+    super(1900, 1080, false)
     self.caption = 'Defender'
 
     @@current_window = self
