@@ -3,7 +3,7 @@ class GameScreen < BaseScreen
   attr_accessor :money
 
   def initialize
-    @money = 300
+    @money = 300000
     @map = Map.new(self, inner_width - menu_width, inner_height)
     @menu = Menu.new(self, menu_width, inner_height, inner_width - menu_width + screen_padding, screen_padding)
 

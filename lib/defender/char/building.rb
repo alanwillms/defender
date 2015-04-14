@@ -11,7 +11,15 @@ class Building
   end
 
   def draw
-    SpriteHelper.image(@type).draw(x, y, z)
+    image = SpriteHelper.image(@type)
+    fixed_y = y
+    fixed_z = MapHelper.fix_z_for_row(z, @row)
+    if image.height > MapHelper.tile_size
+      fixed_y = y - (image.height - MapHelper.tile_size)
+    elsif image.height < MapHelper.tile_size
+      fixed_y = y + (MapHelper.tile_size - image.height)
+    end
+    image.draw(x, fixed_y, fixed_z)
   end
 
   def self.types
@@ -107,6 +115,6 @@ class Building
     end
 
     def z
-      ZOrder::Building
+      ZOrder::Entity
     end
 end

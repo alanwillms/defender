@@ -61,7 +61,7 @@ class Menu
 
   private
     def increase_items_y
-      @items_y += MapHelper.tile_size
+      @items_y += 100
     end
 
     def increase_items_x
@@ -82,7 +82,7 @@ end
 class MenuItem
   HOVER_OFFSET = 3
 
-  attr_reader :defense_type
+  attr_reader :defense_type, :main_image
   attr_accessor :selected
 
   def initialize (defense_type, x, y, z, callback)

@@ -21,6 +21,10 @@ class MapHelper
     (y - screen_padding) / tile_size
   end
 
+  def self.fix_z_for_row(z, row)
+    z + row
+  end
+
   def self.tile_size
     @@tile_size ||= SpriteHelper.image(:floor).width
   end

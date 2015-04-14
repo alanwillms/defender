@@ -16,13 +16,13 @@ class SpriteHelper
       when :floor
         source = "media/images/grass.png"
       when :cannon
-        source = "media/images/defense.png"
+        source = "media/images/cannon.png"
       when :archer_tower
-        source = "media/images/defense.png"
+        source = "media/images/archer_tower.png"
       when :wizard_tower
-        source = "media/images/defense.png"
+        source = "media/images/wizard_tower.png"
       when :tesla
-        source = "media/images/defense.png"
+        source = "media/images/tesla.png"
       when :wall
         source = "media/images/wall.png"
     end

@@ -43,8 +43,9 @@ class Monster
 
   def draw
     identifier = 'monster_' + @type.to_s
+    fixed_z = MapHelper.fix_z_for_row(ZOrder::Entity, @current_row)
     img = SpriteHelper.tiles(identifier.to_sym)[current_sprite]
-    img.draw(@x, @y - 16, ZOrder::Character, 1, 1)
+    img.draw(@x, @y - 16, fixed_z, 1, 1)
     HealthBar.new(@health_points, @initial_health_points, @x, @y - 16).draw
   end
 
