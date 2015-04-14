@@ -26,11 +26,13 @@ class GameScreen < BaseScreen
   def update
     @menu.update
     @map.update
+    ToastHelper.update
   end
 
   def draw
     @map.draw
     @menu.draw
+    ToastHelper.draw
   end
 
   def button_down(id)

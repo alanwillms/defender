@@ -178,12 +178,21 @@ class Map
       defense_type = @screen.menu.selected_item.defense_type
       defense = Defense.new(self, clicked_row, clicked_column, defense_type)
 
-      if can_pay_for? defense.cost and can_build_at?(clicked_row, clicked_column)
+      can_pay = can_pay_for? defense.cost
+      can_build = can_build_at?(clicked_row, clicked_column)
+
+      if can_pay and can_build
         build(defense, clicked_row, clicked_column)
         pay(defense.cost)
         AudioHelper.play :defense_built
       else
         AudioHelper.play :cant_build
+
+        if not can_pay
+          ToastHelper.add_message('Not enough money!', :error)
+        elsif not can_build
+          ToastHelper.add_message('You can\'t build it here!', :error)
+        end
       end
     end
   end
