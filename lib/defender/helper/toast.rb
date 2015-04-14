@@ -16,10 +16,15 @@ class ToastHelper
   end
 
   def self.draw
-    x = 256
-    y = 256
     @@toasts.each do |toast|
-      SpriteHelper.font.draw(toast.message, x, y, ZOrder::UI, 1, 1, toast.color)
+      SpriteHelper.font.draw_rel(
+        toast.message,
+        Window.current_window.width / 2, Window.current_window.height / 2,
+        ZOrder::UI,
+        0.5, 0.5,
+        1, 1,
+        toast.color
+      )
     end
   end
 end
