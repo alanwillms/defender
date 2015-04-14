@@ -1,10 +1,12 @@
 class Map
   attr_reader :max_width, :max_height, :rows, :columns, :last_row, :last_column, :monsters, :screen
+  attr_accessor :wave
 
   def initialize(screen, max_width, max_height)
     @screen = screen
     @max_width = max_width
     @max_height = max_height
+    @wave = 0
 
     @columns = @max_width.to_i / MapHelper.tile_size
     @rows = @max_height.to_i / MapHelper.tile_size
@@ -26,6 +28,7 @@ class Map
       monster_spawners.each do |monster_spawner|
         monster_spawner.spawn_wave
       end
+      @wave += 1
     end
   end
 
@@ -144,7 +147,7 @@ class Map
           AudioHelper.play(:defense_shot)
           if monster.health_points <= 0
             unspawn_monster monster
-            @screen.money += monster.money_loot
+            @screen.money += (monster.money_loot * @wave)
             AudioHelper.play(:monster_death)
           end
         end

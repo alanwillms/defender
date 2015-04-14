@@ -3,20 +3,19 @@ class MonsterSpawner < Building
 
   def initialize(map, row, column)
     super(map, row, column, :monster_spawner)
-    @wave = 0
   end
 
   def spawn_wave
-    if self.class.preset_waves[@wave]
-      self.class.preset_waves[@wave].keys.each do |type|
-        self.class.preset_waves[@wave][type].times do
+    if self.class.preset_waves[@map.wave]
+      self.class.preset_waves[@map.wave].keys.each do |type|
+        self.class.preset_waves[@map.wave][type].times do
           spawn(type)
         end
       end
     else
-      @wave.times { spawn }
+      @map.wave.times { spawn }
     end
-    @wave += 1
+    @map.wave += 1
   end
 
   private
