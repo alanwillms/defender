@@ -33,9 +33,19 @@ class SpriteHelper
     @@images[source.to_sym]
   end
 
-  def self.font(identifier = :default)
+  def self.font(identifier = :default, height = 20)
+    source = nil
+    case identifier
+      when :toast
+        source = "media/fonts/Supercell-magic-webfont.ttf"
+      else
+        source = Gosu::default_font_name
+    end
+
+    identifier = (identifier.to_s + '_' + height.to_s).to_sym
+
     if @@fonts[identifier].nil?
-      @@fonts[identifier] = Gosu::Font.new(Window.current_window, Gosu::default_font_name, 20)
+      @@fonts[identifier] = Gosu::Font.new(Window.current_window, source, height)
     end
     @@fonts[identifier]
   end

@@ -16,17 +16,25 @@ class ToastHelper
   end
 
   def self.draw
-    @@toasts.each do |toast|
-      SpriteHelper.font.draw_rel(
-        toast.message,
-        Window.current_window.width / 2, Window.current_window.height / 2,
-        ZOrder::UI,
-        0.5, 0.5,
-        1, 1,
-        toast.color
-      )
+    x = Window.current_window.width / 2
+    y = Window.current_window.height / 2
+    z = ZOrder::UI
+    font = SpriteHelper.font(:toast, font_height)
+    toast = @@toasts.first
+    unless toast
+      return
     end
+    # @@toasts.each do |toast|
+      font.draw_rel(toast.message, x - 2, y - 2, z, 0.5, 0.5, 1, 1, 0xff000000)
+      font.draw_rel(toast.message, x, y, z, 0.5, 0.5, 1, 1, toast.color)
+    # end
   end
+
+  private
+
+    def self.font_height
+      (MapHelper.tile_size * 1.2).to_i
+    end
 end
 
 class ToastMessage
@@ -39,6 +47,6 @@ class ToastMessage
   end
 
   def color
-    0xffff0000
+    0xffffffff
   end
 end
