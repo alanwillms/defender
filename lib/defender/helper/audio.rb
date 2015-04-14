@@ -1,4 +1,6 @@
 class AudioHelper
+  @@audios = {}
+
   def self.play(effect, is_sfx = true)
     source = nil
 
@@ -20,10 +22,19 @@ class AudioHelper
     end
 
     if source
+      identifier = (source + '_' + is_sfx.to_s).to_sym
+      if @@audios[identifier].nil?
+        if is_sfx
+          @@audios[identifier] = Gosu::Sample.new(Window.current_window, source)
+        else
+          @@audios[identifier] = Gosu::Song.new(Window.current_window, source)
+        end
+      end
+      audio = @@audios[identifier]
       if is_sfx
-        Gosu::Sample.new(Window.current_window, source).play
+        audio.play
       else
-        Gosu::Song.new(Window.current_window, source).play(true)
+        audio.play(true)
       end
     end
   end
