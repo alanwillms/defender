@@ -34,7 +34,11 @@ class MapHelper
     original.each do |row|
       new_row = []
       row.each do |cell|
-        new_row.push cell.dup
+        if cell.is_a? Symbol
+          new_row << cell
+        else
+          new_row << cell.dup
+        end
       end
       cloned_matrix.push new_row
     end

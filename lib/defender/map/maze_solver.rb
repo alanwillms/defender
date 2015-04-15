@@ -10,7 +10,6 @@ class MazeSolver
   def solution
     unless @solved_path
       solve_path
-      DebugHelper.matrix(@solved_path)
     end
     @solved_path
   end
@@ -31,17 +30,17 @@ class MazeSolver
   end
 
   def next_position_for(current_row, current_column)
-    next_step = solution[current_row][current_column]
+    direction = solution[current_row][current_column]
     next_row = current_row
     next_column = current_column
 
-    if next_step == Maze::PATH_GO_UP
+    if direction == Maze::PATH_GO_UP
       next_row -= 1
-    elsif next_step == Maze::PATH_GO_DOWN
+    elsif direction == Maze::PATH_GO_DOWN
       next_row += 1
-    elsif next_step == Maze::PATH_GO_LEFT
+    elsif direction == Maze::PATH_GO_LEFT
       next_column -= 1
-    elsif next_step == Maze::PATH_GO_RIGHT
+    elsif direction == Maze::PATH_GO_RIGHT
       next_column += 1
     end
 
@@ -52,6 +51,7 @@ class MazeSolver
     def solve_path
       @solved_path = MapHelper.clone_matrix(@matrix)
       find_path(@starting_row, @starting_column)
+      DebugHelper.matrix(@solved_path)
       @solved_path
     end
 
