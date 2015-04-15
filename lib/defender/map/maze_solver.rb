@@ -52,7 +52,37 @@ class MazeSolver
       @solved_path = MapHelper.clone_matrix(@matrix)
       find_path(@starting_row, @starting_column)
       DebugHelper.matrix(@solved_path)
+      reduce_path(@starting_row, @starting_column)
+      DebugHelper.matrix(@solved_path)
       @solved_path
+    end
+
+    def is_direction?(value)
+      value == Maze::PATH_GO_LEFT or value == Maze::PATH_GO_DOWN or value == Maze::PATH_GO_RIGHT or value == Maze::PATH_GO_UP
+    end
+
+    def reduce_path(row, column)
+      current_path = @solved_path[row][column]
+
+      if current_path != Maze::PATH_GO_LEFT and is_direction? @solved_path[row][column - 1]
+        @solved_path[row][column] = Maze::PATH_GO_LEFT
+        return reduce_path(row, column - 1)
+      end
+
+      if current_path != Maze::PATH_GO_DOWN and is_direction? @solved_path[row + 1][column]
+        @solved_path[row][column] = Maze::PATH_GO_DOWN
+        return reduce_path(row + 1, column)
+      end
+
+      if current_path != Maze::PATH_GO_RIGHT and is_direction? @solved_path[row][column + 1]
+        @solved_path[row][column] = Maze::PATH_GO_RIGHT
+        return reduce_path(row, column + 1)
+      end
+
+      if current_path != Maze::PATH_GO_UP and is_direction? @solved_path[row - 1][column]
+        @solved_path[row][column] = Maze::PATH_GO_UP
+        return reduce_path(row - 1, column)
+      end
     end
 
     def find_path(row, column)
