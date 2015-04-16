@@ -1,0 +1,55 @@
+:weak_1:
+  :speed: 3,
+  :max_speed: 10,
+  :life: 50,
+  :damage: 1,
+  :shield: 0,
+  :money: 5
+:weak_2:
+  :speed: 6,
+  :max_speed: 20,
+  :life: 50,
+  :damage: 2,
+  :shield: 1
+:quick_1:
+  :speed: 12,
+  :max_speed: 30,
+  :life: 50,
+  :damage: 3,
+  :shield: 1
+:big_hp:
+  :speed: 5,
+  :max_speed: 10,
+  :life: 500,
+  :damage: 3,
+  :shield: 1
+:big_shield:
+  :speed: 5,
+  :max_speed: 10,
+  :life: 50,
+  :damage: 3,
+  :shield: 20
+:big_damage:
+  :speed: 7,
+  :max_speed: 14,
+  :life: 50,
+  :damage: 10,
+  :shield: 2
+:quick_big_hp:
+  :speed: 15,
+  :max_speed: 30,
+  :life: 100,
+  :damage: 3,
+  :shield: 3
+:quick_2:
+  :speed: 30,
+  :max_speed: 40,
+  :life: 30,
+  :damage: 4,
+  :shield: 1
+:big_hp_shield:
+  :speed: 3,
+  :max_speed: 10,
+  :life: 300,
+  :damage: 5,
+  :shield: 15

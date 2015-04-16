@@ -1,4 +1,5 @@
 require 'gosu'
+require 'yaml'
 require 'defender/actor/building'
 require 'defender/actor/defending_city'
 require 'defender/actor/defense'

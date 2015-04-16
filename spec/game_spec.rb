@@ -1,8 +1,14 @@
 describe Game do
+  config = {environment: :test, height: 32, width: 32, full_screen: false, caption: ""}
+
   let(:game) do
-    game = Game.new
+    game = Game.new(config)
     game.current_screen = instance_double("GameScreen")
     game
+  end
+
+  it "shares its config through a \#config" do
+    expect(game.class.config).to be config
   end
 
   it "saves itself as a singleton" do

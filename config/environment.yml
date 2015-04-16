@@ -1,0 +1,5 @@
+:environment: :production
+:width: 1900
+:height: 1080
+:full_screen: false
+:window_title: Defender

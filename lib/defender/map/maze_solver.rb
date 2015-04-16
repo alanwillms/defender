@@ -52,8 +52,8 @@ class MazeSolver
       @solved_path = MapHelper.clone_matrix(@matrix)
       find_path(@starting_row, @starting_column)
       DebugHelper.matrix(@solved_path)
-      reduce_path(@starting_row, @starting_column)
-      DebugHelper.matrix(@solved_path)
+      # reduce_path(@starting_row, @starting_column)
+      # DebugHelper.matrix(@solved_path)
       @solved_path
     end
 

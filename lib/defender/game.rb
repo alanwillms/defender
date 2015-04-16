@@ -1,12 +1,13 @@
 class Game < Gosu::Window
   @@current_window = nil
+  @@config = {}
 
-  def initialize
-    # width, height, fullscreen, update_interval (16.666666)
-    super(1900, 1080, false)
-    self.caption = 'Defender'
+  def initialize(config)
+    super(config[:width], config[:height], config[:full_screen])
+    self.caption = config[:window_title]
 
     @@current_window = self
+    @@config = config
   end
 
   def update
@@ -40,5 +41,9 @@ class Game < Gosu::Window
 
   def self.current_window
     @@current_window
+  end
+
+  def self.config
+    @@config
   end
 end

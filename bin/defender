@@ -3,5 +3,9 @@ $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
 
 require 'defender'
 
-game = Game.new
+config = YAML.load_file("#{File.dirname(__FILE__)}/../config/environment.yml")
+config[:monsters] = YAML.load_file("#{File.dirname(__FILE__)}/../config/monsters.yml")
+config[:buildings] = YAML.load_file("#{File.dirname(__FILE__)}/../config/buildings.yml")
+
+game = Game.new(config)
 game.show
