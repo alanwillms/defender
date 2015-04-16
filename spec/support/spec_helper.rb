@@ -1,9 +1,9 @@
-$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../../lib")
-
+# Must load Simplecov before everything else, otherwise won't cover anything!
 require 'simplecov'
-require 'defender'
-
 SimpleCov.start
+
+$LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../../lib")
+require 'defender'
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
