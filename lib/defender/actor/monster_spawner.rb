@@ -6,9 +6,9 @@ class MonsterSpawner < Building
   end
 
   def spawn_wave
-    if self.class.preset_waves[@map.wave]
-      self.class.preset_waves[@map.wave].keys.each do |type|
-        self.class.preset_waves[@map.wave][type].times do
+    if has_preset_wave?(@map.wave)
+      preset_wave(@map.wave).each do |type, quantity|
+        quantity.times do
           spawn(type)
         end
       end
@@ -28,18 +28,11 @@ class MonsterSpawner < Building
       monster
     end
 
-    def self.preset_waves
-      {
-        0 => {weak_1: 1},
-        1 => {weak_1: 1, weak_2: 1},
-        2 => {weak_1: 2, weak_2: 1},
-        3 => {weak_1: 2, weak_2: 1},
-        4 => {weak_1: 3, weak_2: 2},
-        5 => {weak_1: 4, weak_2: 2},
-        6 => {weak_1: 5, weak_2: 3, quick_1: 2},
-        7 => {weak_1: 6, weak_2: 4, quick_1: 1},
-        8 => {weak_1: 7, weak_2: 3, quick_1: 2},
-        9 => {weak_1: 8, weak_2: 4, quick_1: 3}
-      }
+    def has_preset_wave?(current_wave)
+      not Game.config[:waves][current_wave].nil?
+    end
+
+    def preset_wave(current_wave)
+      Game.config[:waves][current_wave]
     end
 end

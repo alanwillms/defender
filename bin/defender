@@ -6,6 +6,7 @@ require 'defender'
 config = YAML.load_file("#{File.dirname(__FILE__)}/../config/environment.yml")
 config[:monsters] = YAML.load_file("#{File.dirname(__FILE__)}/../config/monsters.yml")
 config[:buildings] = YAML.load_file("#{File.dirname(__FILE__)}/../config/buildings.yml")
+config[:waves] = YAML.load_file("#{File.dirname(__FILE__)}/../config/waves.yml")
 
 game = Game.new(config)
 game.show

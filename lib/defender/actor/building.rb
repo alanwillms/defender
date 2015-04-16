@@ -3,11 +3,18 @@ class Building
   attr_reader :row, :column, :cost, :type
 
   def initialize(map, row, column, type)
+    attributes = Game.config[:buildings][type]
     @map = map
     @row = row
     @column = column
     @type = type
-    setup_attributes
+    @attack = attributes[:damage]
+    @range = attributes[:range]
+    @max_range = attributes[:max_range]
+    @speed = attributes[:speed]
+    @health_points = @initial_health_points = attributes[:life]
+    @shield = attributes[:shield]
+    @cost = attributes[:cost]
   end
 
   def draw
@@ -15,17 +22,6 @@ class Building
   end
 
   private
-
-    def setup_attributes
-      attributes = Game.config[:buildings][@type]
-      @attack = attributes[:damage]
-      @range = attributes[:range]
-      @max_range = attributes[:max_range]
-      @speed = attributes[:speed]
-      @health_points = @initial_health_points = attributes[:life]
-      @shield = attributes[:shield]
-      @cost = attributes[:cost]
-    end
 
     def image
       @image ||= SpriteHelper.image(@type)
