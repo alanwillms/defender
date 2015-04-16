@@ -22,7 +22,12 @@ describe Building do
   end
 
   before :each do
-    allow(Game).to receive(:config).and_return({buildings: {example: building_settings}})
+    allow(Game).to receive(:config).and_return({
+      buildings: {
+        example: building_settings,
+        defending_city: building_settings
+      }
+    })
     allow(SpriteHelper).to receive(:image).and_return(image)
     allow(MapHelper).to receive(:tile_size).and_return(32)
     allow(MapHelper).to receive(:fix_z_for_row).and_return(0)
@@ -36,6 +41,11 @@ describe Building do
       expect(building.column).to be(0)
       expect(building.cost).to be(8)
       expect(building.type).to be(:example)
+    end
+
+    it "detects type if not informed based on subclass name" do
+      defending_city = DefendingCity.new(instance_double("Map"), 0, 0)
+      expect(defending_city.type).to be(:defending_city)
     end
   end
 

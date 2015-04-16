@@ -1,10 +1,6 @@
 class MonsterSpawner < Building
   attr_reader :monsters, :map
 
-  def initialize(map, row, column)
-    super(map, row, column, :monster_spawner)
-  end
-
   def spawn_wave
     if has_preset_wave?(@map.wave)
       preset_wave(@map.wave).each do |type, quantity|

@@ -1,3 +1,4 @@
+require 'active_support/core_ext/string'
 require 'gosu'
 require 'yaml'
 require 'defender/actor/building'

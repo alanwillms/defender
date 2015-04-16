@@ -1,12 +1,11 @@
 class Building
   attr_reader :row, :column, :cost, :type
 
-  def initialize(map, row, column, type)
-    attributes = Game.config[:buildings][type]
+  def initialize(map, row, column, type = nil)
     @map = map
     @row = row
     @column = column
-    @type = type
+    @type = type || guess_type
     @attack = attributes[:damage]
     @range = attributes[:range]
     @max_range = attributes[:max_range]
@@ -43,5 +42,13 @@ class Building
 
     def z
       MapHelper.fix_z_for_row(ZOrder::Entity, @row)
+    end
+
+    def guess_type
+      self.class.name.underscore.to_sym
+    end
+
+    def attributes
+      Game.config[:buildings][@type]
     end
 end
