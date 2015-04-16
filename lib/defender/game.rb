@@ -31,11 +31,11 @@ class Game < Gosu::Window
   end
 
   def current_screen
-    @current_screen ||= GameScreen.new
+    @screen ||= GameScreen.new
   end
 
   def current_screen=(value)
-    @current_screen = value
+    @screen = value
   end
 
   def self.current_window
