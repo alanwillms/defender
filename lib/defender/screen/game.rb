@@ -15,7 +15,7 @@ class GameScreen < BaseScreen
     @map.build_random_walls
     monster_spawner.spawn_wave
 
-    Building.types.keys.each do |building_type|
+    Game.config[:buildings].keys.each do |building_type|
       puts building_type.inspect
       @menu.add_item(building_type, -> { puts "clicked" })
     end

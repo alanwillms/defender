@@ -57,20 +57,16 @@ class Monster
   private
 
     def random_type
-      self.class.types.keys.sample
+      Game.config[:monsters].keys.sample
     end
 
     def setup_attributes
-      types = self.class.types
-      @speed = rand(types[@type][:speed]..types[@type][:max_speed]) / 5
-      @health_points = @initial_health_points = types[@type][:life]
-      @attack = types[@type][:damage]
-      @shield = types[@type][:shield]
-      @money_loot = types[@type][:money] || 0
-    end
-
-    def self.types
-      Game.config[:monsters]
+      attributes = Game.config[:monsters][@type]
+      @speed = rand(attributes[:speed]..attributes[:max_speed]) / 5
+      @health_points = @initial_health_points = attributes[:life]
+      @attack = attributes[:damage]
+      @shield = attributes[:shield]
+      @money_loot = attributes[:money] || 0
     end
 
     def maze_changed?
