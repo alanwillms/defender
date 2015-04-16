@@ -25,9 +25,9 @@ class AudioHelper
       identifier = (source + '_' + is_sfx.to_s).to_sym
       if @@audios[identifier].nil?
         if is_sfx
-          @@audios[identifier] = Gosu::Sample.new(Window.current_window, source)
+          @@audios[identifier] = Gosu::Sample.new(Game.current_window, source)
         else
-          @@audios[identifier] = Gosu::Song.new(Window.current_window, source)
+          @@audios[identifier] = Gosu::Song.new(Game.current_window, source)
         end
       end
       audio = @@audios[identifier]

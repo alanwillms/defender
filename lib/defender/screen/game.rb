@@ -53,11 +53,11 @@ class GameScreen < BaseScreen
     end
 
     def screen_width
-      Window.current_window.width
+      Game.current_window.width
     end
 
     def screen_height
-      Window.current_window.height
+      Game.current_window.height
     end
 
     def inner_height

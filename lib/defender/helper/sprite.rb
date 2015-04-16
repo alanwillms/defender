@@ -28,7 +28,7 @@ class SpriteHelper
     end
 
     if @@images[source.to_sym].nil?
-      @@images[source.to_sym] = Gosu::Image.new(Window.current_window, source, true)
+      @@images[source.to_sym] = Gosu::Image.new(Game.current_window, source, true)
     end
     @@images[source.to_sym]
   end
@@ -45,7 +45,7 @@ class SpriteHelper
     identifier = (identifier.to_s + '_' + height.to_s).to_sym
 
     if @@fonts[identifier].nil?
-      @@fonts[identifier] = Gosu::Font.new(Window.current_window, source, height)
+      @@fonts[identifier] = Gosu::Font.new(Game.current_window, source, height)
     end
     @@fonts[identifier]
   end
@@ -78,7 +78,7 @@ class SpriteHelper
     end
 
     if @@tilesets[source.to_sym].nil?
-      @@tilesets[source.to_sym] = Gosu::Image::load_tiles(Window.current_window, source, tile_width, tile_height, tileable)
+      @@tilesets[source.to_sym] = Gosu::Image::load_tiles(Game.current_window, source, tile_width, tile_height, tileable)
     end
     @@tilesets[source.to_sym]
   end

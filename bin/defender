@@ -3,5 +3,5 @@ $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
 
 require 'defender'
 
-window = Window.new
-window.show
+game = Game.new
+game.show

@@ -16,8 +16,8 @@ class ToastHelper
   end
 
   def self.draw
-    x = Window.current_window.width / 2
-    y = Window.current_window.height / 2
+    x = Game.current_window.width / 2
+    y = Game.current_window.height / 2
     z = ZOrder::UI
     font = SpriteHelper.font(:toast, font_height)
     toast = @@toasts.first

@@ -155,13 +155,13 @@ class Map
     end
 
     if health_points <= 0
-      return Window.current_window.current_screen = GameOverScreen.new
+      return Game.current_window.current_screen = GameOverScreen.new
     end
   end
 
   def clicked
-    mouse_x = Window.current_window.mouse_x
-    mouse_y = Window.current_window.mouse_y
+    mouse_x = Game.current_window.mouse_x
+    mouse_y = Game.current_window.mouse_y
     x1 = 0
     x2 = MapHelper.get_x_for_column(@last_column) + MapHelper.tile_size
     y1 = 0

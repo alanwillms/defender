@@ -100,7 +100,7 @@ class MenuItem
   def draw
     if @selected
       color = 0xff4caf50
-      Window.current_window.draw_quad(
+      Game.current_window.draw_quad(
         @x, @y, color,
         @x + @active_image.width, @y, color,
         @x, @y + @active_image.height, color,
@@ -127,8 +127,8 @@ class MenuItem
   end
 
   def is_mouse_hovering
-    mx = Window.current_window.mouse_x
-    my = Window.current_window.mouse_y
+    mx = Game.current_window.mouse_x
+    my = Game.current_window.mouse_y
 
     (mx >= @x and my >= @y) and (mx <= @x + @active_image.width) and (my <= @y + @active_image.height)
   end

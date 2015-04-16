@@ -53,7 +53,7 @@ class HealthBar
       #   |              |
       # x3,y3 ------- x4,y4
       #
-      Window.current_window.draw_quad(x1, y1, color, x2, y2, color, x3, y3, color, x4, y4, color, z)
+      Game.current_window.draw_quad(x1, y1, color, x2, y2, color, x3, y3, color, x4, y4, color, z)
     end
 
     def health_color
