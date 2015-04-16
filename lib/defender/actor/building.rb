@@ -1,5 +1,4 @@
 class Building
-
   attr_reader :row, :column, :cost, :type
 
   def initialize(map, row, column, type)
