@@ -50,7 +50,6 @@ describe Building do
   end
 
   context "#draw" do
-
     it "renders the image" do
       expect(image).to receive(:draw).with(0, 0, 0)
       building.draw

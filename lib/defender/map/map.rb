@@ -135,7 +135,7 @@ class Map
           monster.attack! defending_city
           unspawn_monster monster
           AudioHelper.play(:monster_attack)
-          if defending_city.health_points <= 0
+          if defending_city.health_points == 0
             @maze.block(defending_city.row, defending_city.column)
           end
         end

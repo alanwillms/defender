@@ -68,7 +68,7 @@ describe Defense do
     end
 
     context "monster has more health points than damage suffered" do
-      it "reduces monster health_points" do
+      it "zero monster health_points" do
         allow(monster).to receive(:health_points).and_return(1)
         expect(monster).to receive(:health_points=).with(0)
         defense.shoot! monster

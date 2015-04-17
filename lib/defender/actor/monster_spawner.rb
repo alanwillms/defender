@@ -9,14 +9,14 @@ class MonsterSpawner < Building
         end
       end
     else
-      @map.wave.times { spawn }
+      @map.wave.times { spawn(random_type) }
     end
     @map.wave += 1
   end
 
   private
 
-    def spawn(type = nil)
+    def spawn(type)
       monster = Monster.new(@map.maze, type)
       monster.warp(@row, @column)
       monster.find_target
@@ -30,5 +30,9 @@ class MonsterSpawner < Building
 
     def preset_wave(current_wave)
       Game.config[:waves][current_wave]
+    end
+
+    def random_type
+      Game.config[:monsters].keys.sample
     end
 end

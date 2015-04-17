@@ -1,21 +1,24 @@
 class Monster
   SPRITE_FRAMES_COUNT = 3
   SPRITE_DOWN_POSITION = 0
+  SPRITE_LEFT_POSITION = 1
   SPRITE_RIGHT_POSITION = 2
   SPRITE_UP_POSITION = 3
-  SPRITE_LEFT_POSITION = 1
 
-  attr_reader :x, :y, :maze_solver, :current_row, :current_column, :initial_health_points, :money_loot
-  attr_accessor :health_points
+  attr_reader :x, :y, :target_x, :target_y, :maze_solver, :facing, :current_row, :current_column, :initial_health_points, :money_loot
+  attr_accessor :health_points, :speed
 
-  def initialize(maze, type = nil)
+  def initialize(maze, type)
     @maze = maze
-    @type = type || random_type
+    @type = type
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
-    @maze_solver = update_maze_solver
-    @last_maze_matrix = nil
-    setup_attributes
+    @speed = rand(attributes[:speed]..attributes[:max_speed]) / 5
+    @health_points = @initial_health_points = attributes[:life]
+    @attack = attributes[:damage]
+    @shield = attributes[:shield]
+    @money_loot = attributes[:money] || 0
+    update_maze_solver
   end
 
   def warp(row, column)
@@ -38,7 +41,11 @@ class Monster
   end
 
   def attack!(target)
-    target.health_points -= @attack
+    if target.health_points >= @attack
+      target.health_points -= @attack
+    else
+      target.health_points = 0
+    end
   end
 
   def draw
@@ -56,17 +63,8 @@ class Monster
 
   private
 
-    def random_type
-      Game.config[:monsters].keys.sample
-    end
-
-    def setup_attributes
-      attributes = Game.config[:monsters][@type]
-      @speed = rand(attributes[:speed]..attributes[:max_speed]) / 5
-      @health_points = @initial_health_points = attributes[:life]
-      @attack = attributes[:damage]
-      @shield = attributes[:shield]
-      @money_loot = attributes[:money] || 0
+    def attributes
+      Game.config[:monsters][@type]
     end
 
     def maze_changed?
