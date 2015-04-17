@@ -64,4 +64,8 @@ class MapHelper
     end
     Math.sqrt sum_of_squares
   end
+
+  def self.tiles_distance(p1, p2)
+    euclidean_distance(p1, p2) / tile_size
+  end
 end

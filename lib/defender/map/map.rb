@@ -80,7 +80,7 @@ class Map
     rand(1..(@rows*@columns/5)).times do
       row, column = *random_cell
       if can_build_at?(row, column)
-        wall = Wall.new(self, row, column)
+        wall = Building.new(self, row, column, :wall)
         build(wall, row, column)
       end
     end
