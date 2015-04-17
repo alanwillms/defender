@@ -2,6 +2,9 @@ class HealthBar
   PADDING = 2
   HEIGHT = 8
   BACKGROUND_COLOR = 0xff000000
+  GOOD_HEALTH_COLOR = 0xff4caf50
+  MEDIUM_HEALTH_COLOR = 0xffffeb3b
+  BAD_HEALTH_COLOR = 0xfff44336
 
   def initialize(health_points, initial_health_points, x, y)
     @health_points = health_points
@@ -58,11 +61,11 @@ class HealthBar
 
     def health_color
       if health_percent > 0.7
-        return 0xff4caf50
+        GOOD_HEALTH_COLOR
       elsif health_percent > 0.3
-        return 0xffffeb3b
+        MEDIUM_HEALTH_COLOR
       else
-        return 0xfff44336
+        BAD_HEALTH_COLOR
       end
     end
 
