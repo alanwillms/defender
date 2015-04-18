@@ -1,18 +1,21 @@
 class DebugHelper
   def self.matrix(matrix)
-    puts ""
+    string ""
     if matrix
       matrix = MapHelper.clone_matrix(matrix)
       matrix.each do |row|
-        puts row.join('')
+        string row.join('')
       end
     else
-      puts "INVALID MATRIX!"
+      string "INVALID MATRIX!"
     end
-    puts ""
+    string ""
   end
 
   def self.string(value)
+    if Game.config[:environment] != :development
+      return
+    end
     puts value
   end
 end
