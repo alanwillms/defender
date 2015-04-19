@@ -33,6 +33,7 @@ describe MonsterSpawner do
       monsters: { monster_1: monster_settings, monster_2: monster_settings },
       waves: {0 => { monster_1: 1, monster_2: 3 } }
     })
+    allow(MapHelper).to receive(:screen_padding).and_return(0)
     allow(MapHelper).to receive(:tile_size).and_return(32)
   end
 

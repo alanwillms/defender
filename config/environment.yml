@@ -3,3 +3,5 @@
 :height: 1080
 :full_screen: false
 :window_title: Defender
+:tile_size: 32
+:screen_padding: 32

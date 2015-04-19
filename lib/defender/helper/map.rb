@@ -2,7 +2,11 @@ class MapHelper
   @@tile_size = nil
 
   def self.screen_padding
-    tile_size
+    Game.config[:screen_padding]
+  end
+
+  def self.tile_size
+    Game.config[:tile_size]
   end
 
   def self.get_x_for_column(column)
@@ -23,10 +27,6 @@ class MapHelper
 
   def self.fix_z_for_row(z, row)
     z + row
-  end
-
-  def self.tile_size
-    @@tile_size ||= SpriteHelper.image(:floor).width
   end
 
   def self.clone_matrix(original)
@@ -57,15 +57,17 @@ class MapHelper
     matrix
   end
 
-  def self.euclidean_distance(p1, p2)
-    sum_of_squares = 0
-    p1.each_with_index do |p1_coord,index|
-      sum_of_squares += (p1_coord - p2[index]) ** 2
-    end
-    Math.sqrt sum_of_squares
-  end
-
   def self.tiles_distance(p1, p2)
     euclidean_distance(p1, p2) / tile_size
   end
+
+  private
+
+    def self.euclidean_distance(p1, p2)
+      sum_of_squares = 0
+      p1.each_with_index do |p1_coord,index|
+        sum_of_squares += (p1_coord - p2[index]) ** 2
+      end
+      Math.sqrt sum_of_squares
+    end
 end
