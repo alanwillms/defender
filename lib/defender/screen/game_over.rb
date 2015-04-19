@@ -1,6 +1,6 @@
 class GameOverScreen < BaseScreen
   def initialize
-    AudioHelper.play(:game_over, false)
+    AudioHelper.play_music :game_over
   end
 
   def draw

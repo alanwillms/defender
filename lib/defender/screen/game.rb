@@ -16,11 +16,10 @@ class GameScreen < BaseScreen
     monster_spawner.spawn_wave
 
     Game.config[:buildings].keys.each do |building_type|
-      puts building_type.inspect
       @menu.add_item(building_type, -> { puts "clicked" })
     end
 
-    AudioHelper.play(:background_music, false)
+    AudioHelper.play_song :background_music
   end
 
   def update

@@ -7,6 +7,8 @@ config = YAML.load_file("#{File.dirname(__FILE__)}/../config/environment.yml")
 config[:monsters] = YAML.load_file("#{File.dirname(__FILE__)}/../config/monsters.yml")
 config[:buildings] = YAML.load_file("#{File.dirname(__FILE__)}/../config/buildings.yml")
 config[:waves] = YAML.load_file("#{File.dirname(__FILE__)}/../config/waves.yml")
+config[:sounds] = YAML.load_file("#{File.dirname(__FILE__)}/../config/sounds.yml")
+config[:songs] = YAML.load_file("#{File.dirname(__FILE__)}/../config/songs.yml")
 
 game = Game.new(config)
 game.show

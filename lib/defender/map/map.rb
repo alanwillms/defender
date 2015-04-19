@@ -134,7 +134,7 @@ class Map
         if defending_city.monster_arrived?(monster)
           monster.attack! defending_city
           unspawn_monster monster
-          AudioHelper.play(:monster_attack)
+          AudioHelper.play_sound :monster_attack
           if defending_city.health_points == 0
             @maze.block(defending_city.row, defending_city.column)
           end
@@ -144,11 +144,11 @@ class Map
       defenses.each do |defense|
         if defense.cooled_down? and defense.monster_at_range?(monster)
           defense.shoot! monster
-          AudioHelper.play(:defense_shot)
+          AudioHelper.play_sound :defense_shot
           if monster.health_points <= 0
             unspawn_monster monster
             @screen.money += (monster.money_loot * @wave)
-            AudioHelper.play(:monster_death)
+            AudioHelper.play_sound :monster_death
           end
         end
       end
@@ -187,9 +187,9 @@ class Map
       if can_pay and can_build
         build(defense, clicked_row, clicked_column)
         pay(defense.cost)
-        AudioHelper.play :defense_built
+        AudioHelper.play_sound :defense_built
       else
-        AudioHelper.play :cant_build
+        AudioHelper.play_sound :cant_build
 
         if not can_pay
           ToastHelper.add_message('Not enough money!', :error)

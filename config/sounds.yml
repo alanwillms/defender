@@ -1,0 +1,5 @@
+:defense_built: "media/audio/sfx/defense_built.wav"
+:monster_attack: "media/audio/sfx/monster_attack.wav"
+:cant_build: "media/audio/sfx/error.wav"
+:defense_shot: "media/audio/sfx/defense_shot.wav"
+:monster_death: "media/audio/sfx/monster_death.wav"
