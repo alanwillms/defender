@@ -1,15 +1,15 @@
 class DebugHelper
   def self.matrix(matrix)
-    string ""
-    if matrix
+    if matrix.is_a? Array
+      string ""
       matrix = MapHelper.clone_matrix(matrix)
       matrix.each do |row|
         string row.join('')
       end
+      string ""
     else
       string "INVALID MATRIX!"
     end
-    string ""
   end
 
   def self.string(value)

@@ -34,7 +34,7 @@ class MapHelper
     original.each do |row|
       new_row = []
       row.each do |cell|
-        if cell.is_a? Symbol
+        if cell.is_a? Symbol or cell.is_a? Numeric
           new_row << cell
         else
           new_row << cell.dup
