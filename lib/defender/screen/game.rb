@@ -44,19 +44,19 @@ class GameScreen < BaseScreen
   private
 
     def menu_width
-      @menu_width ||= 5 * MapHelper.tile_size
+      @menu_width ||= 5 * Game.config[:tile_size]
     end
 
     def screen_padding
-      MapHelper.screen_padding
+      Game.config[:screen_padding]
     end
 
     def screen_width
-      Game.current_window.width
+      Game.config[:width]
     end
 
     def screen_height
-      Game.current_window.height
+      Game.config[:height]
     end
 
     def inner_height

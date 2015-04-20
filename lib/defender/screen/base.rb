@@ -1,7 +1,4 @@
 class BaseScreen
-  def initialize
-  end
-
   def update
   end
 
