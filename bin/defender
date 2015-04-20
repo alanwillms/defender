@@ -9,6 +9,9 @@ config[:buildings] = YAML.load_file("#{File.dirname(__FILE__)}/../config/buildin
 config[:waves] = YAML.load_file("#{File.dirname(__FILE__)}/../config/waves.yml")
 config[:sounds] = YAML.load_file("#{File.dirname(__FILE__)}/../config/sounds.yml")
 config[:songs] = YAML.load_file("#{File.dirname(__FILE__)}/../config/songs.yml")
+config[:sprites] = YAML.load_file("#{File.dirname(__FILE__)}/../config/sprites.yml")
+config[:images] = YAML.load_file("#{File.dirname(__FILE__)}/../config/images.yml")
+config[:fonts] = YAML.load_file("#{File.dirname(__FILE__)}/../config/fonts.yml")
 
 game = Game.new(config)
 game.show

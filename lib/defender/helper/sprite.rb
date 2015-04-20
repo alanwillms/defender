@@ -4,82 +4,29 @@ class SpriteHelper
   @@tilesets = {}
 
   def self.image(identifier)
-    source = nil
-
-    case identifier
-      when :defense_button
-        source = "media/images/defense.png"
-      when :monster_spawner
-        source = "media/images/monster_spawner.png"
-      when :defending_city
-        source = "media/images/defending_city.png"
-      when :floor
-        source = "media/images/grass.png"
-      when :cannon
-        source = "media/images/cannon.png"
-      when :archer_tower
-        source = "media/images/archer_tower.png"
-      when :wizard_tower
-        source = "media/images/wizard_tower.png"
-      when :tesla
-        source = "media/images/tesla.png"
-      when :wall
-        source = "media/images/wall.png"
-    end
-
-    if @@images[source.to_sym].nil?
-      @@images[source.to_sym] = Gosu::Image.new(Game.current_window, source, true)
-    end
-    @@images[source.to_sym]
+    @@images[identifier] ||= Gosu::Image.new(
+      Game.current_window,
+      Game.config[:images][identifier],
+      true
+    )
   end
 
   def self.font(identifier = :default, height = 20)
-    source = nil
-    case identifier
-      when :toast
-        source = "media/fonts/Supercell-magic-webfont.ttf"
-      else
-        source = Gosu::default_font_name
+    source = Game.config[:fonts][identifier]
+    unless source
+      source = Gosu::default_font_name
     end
-
     identifier = (identifier.to_s + '_' + height.to_s).to_sym
-
-    if @@fonts[identifier].nil?
-      @@fonts[identifier] = Gosu::Font.new(Game.current_window, source, height)
-    end
-    @@fonts[identifier]
+    @@fonts[identifier] ||= Gosu::Font.new(Game.current_window, source, height)
   end
 
   def self.tiles(identifier)
-    source = nil
-    tile_width = 32
-    tile_height = 48
-    tileable = false
-
-    case identifier
-      when :monster_weak_1
-        source = "media/images/weak_1.png"
-      when :monster_weak_2
-        source = "media/images/weak_2.png"
-      when :monster_quick_1
-        source = "media/images/quick_1.png"
-      when :monster_big_hp
-        source = "media/images/big_hp.png"
-      when :monster_big_shield
-        source = "media/images/big_shield.png"
-      when :monster_big_damage
-        source = "media/images/big_damage.png"
-      when :monster_quick_big_hp
-        source = "media/images/quick_big_hp.png"
-      when :monster_quick_2
-        source = "media/images/quick_2.png"
-      when :monster_big_hp_shield
-        source = "media/images/big_hp_shield.png"
-    end
-
-    if @@tilesets[source.to_sym].nil?
-      @@tilesets[source.to_sym] = Gosu::Image::load_tiles(Game.current_window, source, tile_width, tile_height, tileable)
-    end
-    @@tilesets[source.to_sym]
+    @@tilesets[identifier] ||= Gosu::Image::load_tiles(
+      Game.current_window,
+      Game.config[:sprites][identifier],
+      Game.config[:sprite_width],
+      Game.config[:sprite_height],
+      Game.config[:sprite_tileable]
+    )
   end
 end
