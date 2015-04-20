@@ -136,6 +136,6 @@ class Monster
 
     def update_maze_solver
       matrix = MapHelper.clone_matrix(@maze.matrix)
-      @maze_solver = @maze.create_solution(matrix, @current_row, @current_column)
+      @maze_solver = @maze.create_solver(matrix, @current_row, @current_column)
     end
 end

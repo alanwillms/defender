@@ -41,7 +41,7 @@ class Maze
         matrix[current_row][current_column] = PATH_BLOCKED
         matrix[defending_city.row][defending_city.column] = PATH_END
 
-        unless create_solution(matrix, monster_spawner.row, monster_spawner.column).has_solution?
+        unless create_solver(matrix, monster_spawner.row, monster_spawner.column).has_solution?
           return true
         end
       end
@@ -49,7 +49,7 @@ class Maze
     return false
   end
 
-  def create_solution(matrix, start_row, start_column)
+  def create_solver(matrix, start_row, start_column)
     MazeSolver.new(MapHelper.clone_matrix(matrix), start_row, start_column)
   end
 

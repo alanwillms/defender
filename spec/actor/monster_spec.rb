@@ -19,7 +19,7 @@ describe Monster do
     maze = double('Maze')
     maze_solver = double('MazeSolver')
     allow(maze).to receive(:matrix).and_return({})
-    allow(maze).to receive(:create_solution).and_return(maze_solver)
+    allow(maze).to receive(:create_solver).and_return(maze_solver)
     type = :example
     Monster.new(maze, type)
   end

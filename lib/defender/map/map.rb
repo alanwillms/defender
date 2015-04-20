@@ -216,7 +216,7 @@ class Map
       matrix[row][column] = Maze::PATH_BLOCKED
       @monsters.each do |monster|
         monster_matrix = MapHelper.clone_matrix(matrix)
-        solver = maze.create_solution(monster_matrix, monster.current_row, monster.current_column)
+        solver = maze.create_solver(monster_matrix, monster.current_row, monster.current_column)
         unless solver.has_solution?
           blocks = true
           break
