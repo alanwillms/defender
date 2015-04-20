@@ -51,7 +51,7 @@ class Menu
     write "Defender"
     write "Money = #{@screen.money}"
     write "HP = #{@screen.map.health_points}"
-    write "Buildings = #{@screen.map.buildings_count}"
+    write "Buildings = #{@screen.map.buildings.size}"
     write "Monsters = #{@screen.map.monsters.size}"
 
     @items.each do |item|

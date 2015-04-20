@@ -64,18 +64,6 @@ class Map
     hp
   end
 
-  def buildings_count
-    counter = 0
-    @buildings_map.each do |row|
-      row.each do |cell|
-        unless cell.nil?
-          counter += 1
-        end
-      end
-    end
-    counter
-  end
-
   def build_random_walls
     rand(1..(@rows*@columns/5)).times do
       row, column = *random_cell
