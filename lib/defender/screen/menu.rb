@@ -1,5 +1,5 @@
 class Menu
-  attr_reader :selected_item
+  attr_reader :selected_item, :items
 
   def initialize(screen, width, height, x, y)
     @screen = screen
@@ -77,68 +77,4 @@ class Menu
       SpriteHelper.font.draw(value, @texts_x, @texts_y, ZOrder::UI)
       @texts_y += MapHelper.tile_size
     end
-end
-
-class MenuItem
-  HOVER_OFFSET = 3
-
-  attr_reader :defense_type, :main_image
-  attr_accessor :selected
-
-  def initialize (defense_type, x, y, z, callback)
-    @defense_type = defense_type
-    @main_image = SpriteHelper.image(defense_type)
-    @hover_image = @main_image
-    @original_x = @x = x
-    @original_y = @y = y
-    @z = z
-    @callback = callback
-    @active_image = @main_image
-    @selected = false
-  end
-
-  def draw
-    if @selected
-      color = 0xff4caf50
-      Game.current_window.draw_quad(
-        @x, @y, color,
-        @x + @active_image.width, @y, color,
-        @x, @y + @active_image.height, color,
-        @x + @active_image.width, @y + @active_image.height, color,
-        @z
-      )
-    end
-    @active_image.draw(@x, @y, @z)
-  end
-
-  def update
-    if is_mouse_hovering then
-      if !@hover_image.nil? then
-        @active_image = @hover_image
-      end
-
-      @x = @original_x + HOVER_OFFSET
-      @y = @original_y + HOVER_OFFSET
-    else
-      @active_image = @main_image
-      @x = @original_x
-      @y = @original_y
-    end
-  end
-
-  def is_mouse_hovering
-    mx = Game.current_window.mouse_x
-    my = Game.current_window.mouse_y
-
-    (mx >= @x and my >= @y) and (mx <= @x + @active_image.width) and (my <= @y + @active_image.height)
-  end
-
-  def clicked
-    if is_mouse_hovering then
-      @callback.call
-      true
-    else
-      false
-    end
-  end
 end
