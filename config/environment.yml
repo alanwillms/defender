@@ -1,6 +1,6 @@
 :environment: :production
-:width: 1900
-:height: 1080
+:width: 740
+:height: 580
 :full_screen: false
 :window_title: Defender
 :tile_size: 32

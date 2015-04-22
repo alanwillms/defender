@@ -165,14 +165,14 @@ describe Monster do
 
   context "#draw" do
     it "renders the image" do
-      expect(image).to receive(:draw)
+      expect(image).to receive(:draw_rot)
       monster.draw
     end
 
     it "renders a health bar" do
       health_bar = double('health_bar')
       allow(HealthBar).to receive(:new).and_return(health_bar)
-      expect(image).to receive(:draw)
+      expect(image).to receive(:draw_rot)
       expect(health_bar).to receive(:draw)
       monster.draw
     end

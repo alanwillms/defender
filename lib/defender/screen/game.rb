@@ -36,9 +36,10 @@ class GameScreen < BaseScreen
       inner_height = Game.config[:height] - (screen_padding * 2)
       inner_width = Game.config[:width] - (screen_padding * 2)
       menu_width = 5 * Game.config[:tile_size]
+      map_size = 16 * Game.config[:tile_size]
       @money = 300
-      @map = Map.new(self, inner_width - menu_width, inner_height)
-      @menu = Menu.new(self, menu_width, inner_height, inner_width - menu_width + screen_padding, screen_padding)
+      @map = Map.new(self, 16, 16)
+      @menu = Menu.new(self, menu_width, inner_height, map_size + screen_padding, screen_padding)
     end
 
     def set_buildings

@@ -14,7 +14,7 @@ describe Map do
   end
 
   let :map do
-    Map.new(game_screen, 1024, 768)
+    Map.new(game_screen, 16, 16)
   end
 
   let :monster do

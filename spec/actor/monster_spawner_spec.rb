@@ -1,6 +1,6 @@
 describe MonsterSpawner do
   let :map do
-    Map.new(instance_double('GameScreen'), 1024, 768)
+    Map.new(instance_double('GameScreen'), 16, 16)
   end
 
   let :monster_spawner do

@@ -1,19 +1,17 @@
 class Map
-  attr_reader :max_width, :max_height, :rows, :columns, :last_row, :last_column, :monsters, :screen
+  attr_reader :rows, :columns, :last_row, :last_column, :monsters, :screen
   attr_accessor :wave
 
-  def initialize(screen, max_width, max_height)
+  def initialize(screen, rows, columns)
     @screen = screen
-    @max_width = max_width
-    @max_height = max_height
     @wave = 0
 
-    @columns = @max_width.to_i / MapHelper.tile_size
-    @rows = @max_height.to_i / MapHelper.tile_size
-    @last_column = @columns - 1
-    @last_row = @rows - 1
+    @columns = columns
+    @rows = rows
+    @last_column = columns - 1
+    @last_row = rows - 1
 
-    @buildings_map = MapHelper.create_matrix(@rows, @columns)
+    @buildings_map = MapHelper.create_matrix(rows, columns)
     @monsters = []
   end
 
