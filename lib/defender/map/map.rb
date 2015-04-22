@@ -107,12 +107,6 @@ class Map
     end
   end
 
-  def monster_at_defending_city?(monster)
-    monster_row = MapHelper.get_row_for_y(monster.y)
-    monster_column = MapHelper.get_column_for_x(monster.x)
-    monster_row == @last_row and monster_column == @last_column
-  end
-
   def update
     @monsters.each do |monster|
       monster.find_target
