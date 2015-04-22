@@ -144,7 +144,9 @@ describe Map do
 
   context "#build_random_walls" do
     it "creates random wall buildings" do
-      fail
+      current_buildings_count = map.buildings.size
+      map.build_random_walls
+      expect(map.buildings.size).not_to eq(current_buildings_count)
     end
   end
 

@@ -13,6 +13,7 @@ describe GameScreen do
   let :font do
     font = instance_double("Gosu::Font")
     allow(font).to receive(:draw)
+    allow(font).to receive(:draw_rel)
     font
   end
 
