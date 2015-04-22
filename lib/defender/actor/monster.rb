@@ -21,11 +21,11 @@ class Monster
     update_maze_solver
   end
 
-  def warp(row, column)
-    @x = MapHelper.get_x_for_column(column)
-    @y = MapHelper.get_y_for_row(row)
-    @current_row = row
-    @current_column = column
+  def warp(cell)
+    @x = cell.point.x
+    @y = cell.point.y
+    @current_row = cell.row
+    @current_column = cell.column
     update_maze_solver
   end
 
@@ -136,6 +136,7 @@ class Monster
 
     def update_maze_solver
       matrix = MapHelper.clone_matrix(@maze.matrix)
-      @maze_solver = @maze.create_solver(matrix, @current_row, @current_column)
+      start_cell = Cell.new(@maze.map, @current_row, @current_column)
+      @maze_solver = @maze.create_solver(matrix, start_cell)
     end
 end

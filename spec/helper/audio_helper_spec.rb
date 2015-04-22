@@ -14,10 +14,8 @@ describe AudioHelper do
     stub_const("Gosu::Song", fake_audio_class)
     allow_any_instance_of(Gosu::Sample).to receive(:play)
     allow_any_instance_of(Gosu::Song).to receive(:play)
-    allow(Game).to receive(:config).and_return({
-      sounds: {existant: Tempfile.new.path},
-      songs: {existant: Tempfile.new.path}
-    })
+    Game.config[:sounds][:existant] = Tempfile.new.path
+    Game.config[:songs][:existant] = Tempfile.new.path
   end
 
   context "#play_sound" do

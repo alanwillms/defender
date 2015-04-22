@@ -1,18 +1,7 @@
 describe Map do
-  building_settings = {
-    damage: 1,
-    range: 1000,
-    max_range: 1000,
-    speed: 4,
-    bullet_speed: 5,
-    life: 6,
-    shield: 7,
-    cost: 100
-  }
-
   let :menu do
     menu = instance_double("Menu")
-    menu_item = instance_double("MenuItem", defense_type: :defense)
+    menu_item = instance_double("MenuItem", defense_type: :cannon)
     allow(menu).to receive(:selected_item).and_return(menu_item)
     menu
   end
@@ -33,15 +22,18 @@ describe Map do
   end
 
   let :monster_spawner do
-    MonsterSpawner.new(map, 0, 0)
+    MonsterSpawner.new(Cell.new(map, 0, 0))
   end
 
   let :defending_city do
-    DefendingCity.new(map, map.last_row, map.last_column)
+    DefendingCity.new(Cell.new(map, map.last_row, map.last_column))
   end
 
   let :defense do
-    Defense.new(map, 0, map.last_column)
+    defense = Defense.new(Cell.new(map, 0, map.last_column), :cannon)
+    defense.instance_variable_set(:@range, 1_000)
+    defense.instance_variable_set(:@max_range, 1_000)
+    defense
   end
 
   let :image do
@@ -52,35 +44,16 @@ describe Map do
     image
   end
 
-  let :game do
-    game = instance_double("Game")
-    allow(game).to receive(:current_screen).and_return(game_screen)
-    allow(game).to receive(:current_screen=)
-    game
-  end
-
   before :each do
-    allow(Game).to receive(:config).and_return({
-      waves: {},
-      screen_padding: 0,
-      tile_size: 32,
-      buildings: {
-        defending_city: building_settings,
-        monster_spawner: building_settings,
-        defense: building_settings,
-        wall: building_settings
-      }
-    })
-    allow(Game).to receive(:current_window).and_return(game)
     allow(MapHelper).to receive(:tile_size).and_return(32)
     allow(SpriteHelper).to receive(:image).and_return(image)
     allow(AudioHelper).to receive(:play_sound)
     allow(AudioHelper).to receive(:play_song)
     allow(monster_spawner).to receive(:spawn_wave)
 
-    map.build(defending_city, map.last_row, map.last_column)
-    map.build(monster_spawner, 0, 0)
-    map.build(defense, 0, map.last_column)
+    map.build(defending_city)
+    map.build(monster_spawner)
+    map.build(defense)
     map.build_random_walls
   end
 
@@ -152,8 +125,8 @@ describe Map do
 
   context "#build" do
     it "add a building to map#buildings" do
-      new_wall = Building.new(map, 2, 2, :wall)
-      map.build(new_wall, 2, 2)
+      new_wall = Building.new(Cell.new(map, 2, 2), :wall)
+      map.build(new_wall)
       expect(map.buildings).to include(new_wall)
     end
   end
@@ -167,11 +140,11 @@ describe Map do
 
   context "#has_element_at?" do
     it "returns true if there is an element at the position" do
-      expect(map.has_element_at?(0, 0)).to be true
+      expect(map.has_element_at?(Cell.new(map, 0, 0))).to be true
     end
 
     it "returns false if there is no element at the position" do
-      expect(map.has_element_at?(5, 5)).to be false
+      expect(map.has_element_at?(Cell.new(map, 5, 5))).to be false
     end
   end
 
@@ -199,8 +172,8 @@ describe Map do
       map.monsters << monster
       allow(monster).to receive(:find_target)
       allow(monster).to receive(:move)
-      allow(monster).to receive(:current_row).and_return(defending_city.row)
-      allow(monster).to receive(:current_column).and_return(defending_city.column)
+      allow(monster).to receive(:current_row).and_return(defending_city.cell.row)
+      allow(monster).to receive(:current_column).and_return(defending_city.cell.column)
       allow(monster).to receive(:attack!)
       allow(monster).to receive(:center).and_return([0, 0])
       allow(monster).to receive(:money_loot).and_return(10)
@@ -233,7 +206,7 @@ describe Map do
       context "when defending city is defeated" do
         it "blocks defending city cell" do
           allow(defending_city).to receive(:health_points).and_return(0)
-          expect_any_instance_of(Maze).to receive(:block).with(defending_city.row, defending_city.column)
+          expect_any_instance_of(Maze).to receive(:block).with(defending_city.cell)
           map.update
         end
       end
@@ -301,7 +274,7 @@ describe Map do
 
         context "user has enough money to build" do
           it "builds the defense" do
-            allow(game_screen).to receive(:money).and_return(100)
+            allow(game_screen).to receive(:money).and_return(100_000)
             expect(map).to receive(:build).at_least(:once)
             expect(map).to receive(:pay).at_least(:once)
             expect(AudioHelper).to receive(:play_sound).with(:defense_built)
@@ -311,7 +284,7 @@ describe Map do
 
         context "user has no money to build" do
           it "alerts user if he has no money to build" do
-            allow(game_screen).to receive(:money).and_return(99)
+            allow(game_screen).to receive(:money).and_return(0)
             expect(AudioHelper).to receive(:play_sound).with(:cant_build)
             map.clicked
           end
@@ -320,8 +293,8 @@ describe Map do
 
       context "occupied cell" do
         it "alerts user he can't build at that position" do
-          allow(Game.current_window).to receive(:mouse_x).and_return(0)
-          allow(Game.current_window).to receive(:mouse_y).and_return(0)
+          allow(Game.current_window).to receive(:mouse_x).and_return(Game.config[:screen_padding] + 1)
+          allow(Game.current_window).to receive(:mouse_y).and_return(Game.config[:screen_padding] + 1)
           expect(AudioHelper).to receive(:play_sound).with(:cant_build)
           map.clicked
         end

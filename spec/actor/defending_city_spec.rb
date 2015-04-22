@@ -1,15 +1,4 @@
 describe DefendingCity do
-  building_settings = {
-    damage: 1,
-    range: 2,
-    max_range: 3,
-    speed: 4,
-    bullet_speed: 5,
-    life: 6,
-    shield: 7,
-    cost: 8
-  }
-
   let :image do
     image = instance_double("Gosu::Image")
     allow(image).to receive(:draw)
@@ -19,7 +8,7 @@ describe DefendingCity do
   end
 
   let :defending_city do
-    defending_city = DefendingCity.new(instance_double("Map"), 0, 0)
+    defending_city = DefendingCity.new(Cell.new(instance_double("Map"), 0, 0))
     allow(defending_city).to receive(:image).and_return(image)
     defending_city
   end
@@ -29,7 +18,6 @@ describe DefendingCity do
   end
 
   before :each do
-    allow(Game).to receive(:config).and_return({buildings: {defending_city: building_settings}})
     allow(SpriteHelper).to receive(:image).and_return(image)
     allow(MapHelper).to receive(:tile_size).and_return(32)
     allow(MapHelper).to receive(:fix_z_for_row).and_return(0)

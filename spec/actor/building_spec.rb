@@ -1,15 +1,4 @@
 describe Building do
-  building_settings = {
-    damage: 1,
-    range: 2,
-    max_range: 3,
-    speed: 4,
-    bullet_speed: 5,
-    life: 6,
-    shield: 7,
-    cost: 8
-  }
-
   let :image do
     image = instance_double("Gosu::Image")
     allow(image).to receive(:width).and_return(32)
@@ -18,16 +7,10 @@ describe Building do
   end
 
   let :building do
-    Building.new(instance_double("Map"), 0, 0, :example)
+    Building.new(Cell.new(instance_double("Map"), 0, 0), :cannon)
   end
 
   before :each do
-    allow(Game).to receive(:config).and_return({
-      buildings: {
-        example: building_settings,
-        defending_city: building_settings
-      }
-    })
     allow(SpriteHelper).to receive(:image).and_return(image)
     allow(MapHelper).to receive(:tile_size).and_return(32)
     allow(MapHelper).to receive(:fix_z_for_row).and_return(0)
@@ -37,14 +20,11 @@ describe Building do
 
   context "#initialize" do
     it "sets attributes based on its type" do
-      expect(building.row).to be(0)
-      expect(building.column).to be(0)
-      expect(building.cost).to be(8)
-      expect(building.type).to be(:example)
+      expect(building.cost).to be(Game.config[:buildings][:cannon][:cost])
     end
 
     it "detects type if not informed based on subclass name" do
-      defending_city = DefendingCity.new(instance_double("Map"), 0, 0)
+      defending_city = DefendingCity.new(Cell.new(instance_double("Map"), 0, 0))
       expect(defending_city.type).to be(:defending_city)
     end
   end

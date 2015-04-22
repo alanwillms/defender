@@ -1,18 +1,14 @@
 describe Game do
-  config = {environment: :test, height: 32, width: 32, full_screen: false, caption: ""}
-
   let(:game) do
-    game = Game.new(config)
-    game.current_screen = instance_double("GameScreen")
-    game
+    Game.current_window
   end
 
   it "shares its config through a \#config" do
-    expect(game.class.config).to be config
+    expect(Game.config).to be_a(Hash)
   end
 
   it "saves itself as a singleton" do
-    expect(game.class.current_window).to be game
+    expect(Game.current_window).to be_a(Game)
   end
 
   it "displays the cursor" do

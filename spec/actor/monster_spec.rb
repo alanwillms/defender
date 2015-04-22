@@ -1,13 +1,4 @@
 describe Monster do
-  monster_settings = {
-    speed: 10,
-    max_speed: 10,
-    life: 50,
-    damage: 10,
-    shield: 0,
-    money: 5
-  }
-
   let :image do
     image = instance_double("Gosu::Image")
     allow(image).to receive(:width).and_return(32)
@@ -15,13 +6,12 @@ describe Monster do
     image
   end
 
+  let :map do
+    Game.current_window.current_screen.map
+  end
+
   let :monster do
-    maze = double('Maze')
-    maze_solver = double('MazeSolver')
-    allow(maze).to receive(:matrix).and_return({})
-    allow(maze).to receive(:create_solver).and_return(maze_solver)
-    type = :example
-    Monster.new(maze, type)
+    map.monsters.first
   end
 
   let :target do
@@ -29,7 +19,6 @@ describe Monster do
   end
 
   before :each do
-    allow(Game).to receive(:config).and_return({monsters: {example: monster_settings}})
     allow(MapHelper).to receive(:tile_size).and_return(32)
     allow(MapHelper).to receive(:screen_padding).and_return(0)
     tileset = []
@@ -39,7 +28,7 @@ describe Monster do
 
   context "#warp" do
     it "changes monster row, column, x and y" do
-      monster.warp(1, 1)
+      monster.warp(Cell.new(map, 1, 1))
       expect(monster.x).to eq(32)
       expect(monster.y).to eq(32)
       expect(monster.current_row).to eq(1)
@@ -51,7 +40,7 @@ describe Monster do
     context "target has more health points than damage suffered" do
       it "reduces target health_points" do
         allow(target).to receive(:health_points).and_return(30)
-        expect(target).to receive(:health_points=).with(30 - monster_settings[:damage])
+        expect(target).to receive(:health_points=).with(30 - Game.config[:monsters][:weak_1][:damage])
         monster.attack! target
       end
     end
@@ -66,39 +55,50 @@ describe Monster do
   end
 
   context "#find_target" do
+    before :each do
+      # Remove all walls
+      buildings = map.instance_variable_get(:@buildings_map)
+      map.instance_variable_set(:@maze, nil)
+      map.buildings.each do |building|
+        if building.type == :wall
+          buildings[building.cell.row][building.cell.column] = nil
+        end
+      end
+
+      monster.warp(Cell.new(map, 1, 1))
+    end
+
     it "sets target x and y positions" do
-      allow(monster.maze_solver).to receive(:next_position_for).and_return([0, 1])
-      monster.warp(0, 0)
       monster.find_target
-      expect(monster.target_x).to be(32)
+      expect(monster.target_x).to be(MapHelper.tile_size)
       expect(monster.target_y).to be(0)
     end
 
     it "turn up if y decreased" do
-      allow(monster.maze_solver).to receive(:next_position_for).and_return([0, 1])
-      monster.warp(1, 1)
-      monster.find_target
+      monster.instance_variable_set(:@target_x, monster.x)
+      monster.instance_variable_set(:@target_y, monster.y - 1)
+      monster.send(:set_face)
       expect(monster.facing).to be(Monster::SPRITE_UP_POSITION)
     end
 
     it "turn down if y increased" do
-      allow(monster.maze_solver).to receive(:next_position_for).and_return([2, 1])
-      monster.warp(1, 1)
-      monster.find_target
+      monster.instance_variable_set(:@target_x, monster.x)
+      monster.instance_variable_set(:@target_y, monster.y + 1)
+      monster.send(:set_face)
       expect(monster.facing).to be(Monster::SPRITE_DOWN_POSITION)
     end
 
     it "turn left if x decreased" do
-      allow(monster.maze_solver).to receive(:next_position_for).and_return([1, 0])
-      monster.warp(1, 1)
-      monster.find_target
+      monster.instance_variable_set(:@target_x, monster.x - 1)
+      monster.instance_variable_set(:@target_y, monster.y)
+      monster.send(:set_face)
       expect(monster.facing).to be(Monster::SPRITE_LEFT_POSITION)
     end
 
     it "turn right if x increased" do
-      allow(monster.maze_solver).to receive(:next_position_for).and_return([1, 2])
-      monster.warp(1, 1)
-      monster.find_target
+      monster.instance_variable_set(:@target_x, monster.x + 1)
+      monster.instance_variable_set(:@target_y, monster.y)
+      monster.send(:set_face)
       expect(monster.facing).to be(Monster::SPRITE_RIGHT_POSITION)
     end
   end
@@ -106,55 +106,59 @@ describe Monster do
   context "move" do
     context "horizontally" do
       it "decrease x if target at the left" do
-        allow(monster.maze_solver).to receive(:next_position_for).and_return([1, 0])
-        monster.warp(1, 1)
-        monster.find_target
+        monster.warp(Cell.new(map, 0, 1))
+        monster.instance_variable_set(:@target_x, 0)
+        monster.instance_variable_set(:@target_y, 0)
+        previous_x = monster.x
         monster.move
-        expect(monster.x).to be(32 - monster.speed)
+        expect(monster.x).to be(previous_x - monster.speed)
       end
 
       it "increase x if target at the right" do
-        allow(monster.maze_solver).to receive(:next_position_for).and_return([1, 2])
-        monster.warp(1, 1)
-        monster.find_target
+        monster.warp(Cell.new(map, 0, 0))
+        monster.instance_variable_set(:@target_x, MapHelper.tile_size)
+        monster.instance_variable_set(:@target_y, 0)
+        previous_x = monster.x
         monster.move
-        expect(monster.x).to be(32 + monster.speed)
+        expect(monster.x).to be(previous_x + monster.speed)
       end
 
       it "changes current column if arrived at target" do
-        allow(monster.maze_solver).to receive(:next_position_for).and_return([1, 2])
-        monster.warp(1, 1)
-        monster.speed = 32
-        monster.find_target
+        monster.warp(Cell.new(map, 0, 0))
+        monster.instance_variable_set(:@target_x, MapHelper.tile_size)
+        monster.instance_variable_set(:@target_y, 0)
+        monster.speed = MapHelper.tile_size
         monster.move
-        expect(monster.current_column).to be(2)
+        expect(monster.current_column).to be(1)
       end
     end
 
     context "vertically" do
       it "decrease y if target at the top" do
-        allow(monster.maze_solver).to receive(:next_position_for).and_return([0, 1])
-        monster.warp(1, 1)
-        monster.find_target
+        monster.warp(Cell.new(map, 1, 0))
+        monster.instance_variable_set(:@target_x, 0)
+        monster.instance_variable_set(:@target_y, 0)
+        previous_y = monster.y
         monster.move
-        expect(monster.y).to be(32 - monster.speed)
+        expect(monster.y).to be(previous_y - monster.speed)
       end
 
       it "increase y if target at the bottom" do
-        allow(monster.maze_solver).to receive(:next_position_for).and_return([2, 1])
-        monster.warp(1, 1)
-        monster.find_target
+        monster.warp(Cell.new(map, 0, 0))
+        monster.instance_variable_set(:@target_x, 0)
+        monster.instance_variable_set(:@target_y, MapHelper.tile_size)
+        previous_y = monster.y
         monster.move
-        expect(monster.y).to be(32 + monster.speed)
+        expect(monster.y).to be(previous_y + monster.speed)
       end
 
       it "changes current row if arrived at target" do
-        allow(monster.maze_solver).to receive(:next_position_for).and_return([2, 1])
-        monster.warp(1, 1)
-        monster.speed = 32
-        monster.find_target
+        monster.warp(Cell.new(map, 0, 0))
+        monster.instance_variable_set(:@target_x, 0)
+        monster.instance_variable_set(:@target_y, MapHelper.tile_size)
+        monster.speed = MapHelper.tile_size
         monster.move
-        expect(monster.current_row).to be(2)
+        expect(monster.current_row).to be(1)
       end
     end
   end
@@ -177,7 +181,7 @@ describe Monster do
   context "#center" do
     it "returns center x,y of the center" do
       allow(MapHelper).to receive(:tile_size).and_return(32)
-      monster.warp(0, 0)
+      monster.warp(Cell.new(map, 0, 0))
       expect(monster.center).to eq([16, 16])
     end
   end

@@ -1,44 +1,37 @@
 describe MapHelper do
-  before :each do
-    allow(Game).to receive(:config).and_return({
-      screen_padding: 5,
-      tile_size: 10
-    })
-  end
-
   context ".screen_padding" do
     it "returns Game.config value" do
-      expect(MapHelper.screen_padding).to eq(5)
+      expect(MapHelper.screen_padding).to eq(Game.config[:screen_padding])
     end
   end
 
   context ".tile_size" do
     it "returns Game.config value" do
-      expect(MapHelper.tile_size).to eq(10)
+      expect(MapHelper.tile_size).to eq(Game.config[:tile_size])
     end
   end
 
   context ".get_x_for_column" do
     it "calculates based on tile size and screen padding" do
-      expect(MapHelper.get_x_for_column(5)).to eq(55)
+      expect(MapHelper.get_x_for_column(5)).to eq(MapHelper.screen_padding + (5 * MapHelper.tile_size))
     end
   end
 
   context ".get_y_for_row" do
     it "calculates based on tile size and screen padding" do
-      expect(MapHelper.get_y_for_row(5)).to eq(55)
+      expect(MapHelper.get_y_for_row(5)).to eq(MapHelper.screen_padding + (5 * MapHelper.tile_size))
     end
   end
 
   context ".get_column_for_x" do
     it "calculates based on tile size and screen padding" do
-      expect(MapHelper.get_column_for_x(55)).to eq(5)
+      expect(MapHelper.get_column_for_x(MapHelper.screen_padding + (5 * MapHelper.tile_size))).to eq(5)
     end
   end
 
   context ".get_row_for_y" do
     it "calculates based on tile size and screen padding" do
-      expect(MapHelper.get_row_for_y(55)).to eq(5)
+      expect(MapHelper.get_row_for_y(MapHelper.screen_padding + (5 * MapHelper.tile_size))).to eq(5)
     end
   end
 
@@ -65,8 +58,8 @@ describe MapHelper do
   context ".tiles_distance" do
     it "calculates distance between two points in tiles" do
       p1 = [0, 0]
-      p2 = [0, 40]
-      expect(MapHelper.tiles_distance(p1, p2)).to eq(4)
+      p2 = [0, MapHelper.tile_size]
+      expect(MapHelper.tiles_distance(p1, p2)).to eq(1)
     end
   end
 end

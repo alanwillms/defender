@@ -12,11 +12,9 @@ describe SpriteHelper do
   before :each do
     stub_const("Gosu::Image", fake_image_class)
     stub_const("Gosu::Font", fake_image_class)
-    allow(Game).to receive(:config).and_return({
-      images: {valid: "path/to/image"},
-      fonts: {valid: "path/to/font"},
-      sprites: {valid: "path/to/sprite"}
-    })
+    Game.config[:images][:valid] = "path/to/image"
+    Game.config[:fonts][:valid] = "path/to/image"
+    Game.config[:sprites][:valid] = "path/to/image"
   end
 
   context ".image" do

@@ -66,18 +66,17 @@ class Map
 
   def build_random_walls
     rand(1..(@rows*@columns/5)).times do
-      row, column = *random_cell
-      if can_build_at?(row, column)
-        wall = Building.new(self, row, column, :wall)
-        build(wall, row, column)
+      cell = random_cell
+      if can_build_at?(cell)
+        build(Building.new(cell, :wall))
       end
     end
   end
 
-  def build(object, row, column)
-    @buildings_map[row][column] = object
+  def build(object)
+    @buildings_map[object.cell.row][object.cell.column] = object
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
-      maze.block(row, column)
+      maze.block(object.cell)
     end
   end
 
@@ -85,8 +84,8 @@ class Map
     @screen.money = @screen.money - cost
   end
 
-  def has_element_at?(row, column)
-    @buildings_map[row][column].nil? == false
+  def has_element_at?(cell)
+    @buildings_map[cell.row][cell.column].nil? == false
   end
 
   def draw
@@ -118,7 +117,7 @@ class Map
           unspawn_monster monster
           AudioHelper.play_sound :monster_attack
           if defending_city.health_points == 0
-            @maze.block(defending_city.row, defending_city.column)
+            @maze.block(defending_city.cell)
           end
         end
       end
@@ -142,33 +141,16 @@ class Map
   end
 
   def clicked
-    mouse_x = Game.current_window.mouse_x
-    mouse_y = Game.current_window.mouse_y
-    x1 = 0
-    x2 = MapHelper.get_x_for_column(@last_column) + MapHelper.tile_size
-    y1 = 0
-    y2 = MapHelper.get_y_for_row(@last_row) + MapHelper.tile_size
-    x_inside = (mouse_x >= x1 and mouse_x <= x2)
-    y_inside = (mouse_y >= y1 and mouse_y <= y2)
-
-    if x_inside and y_inside
-
-      clicked_column = MapHelper.get_column_for_x(mouse_x.to_i)
-      clicked_row = MapHelper.get_row_for_y(mouse_y.to_i)
-
-      if clicked_column < 0 or clicked_column > @last_column or clicked_row < 0 or clicked_row > @last_row
-        return
-      end
-
+    if mouse_over
       defense_type = @screen.menu.selected_item.defense_type
-      defense = Defense.new(self, clicked_row, clicked_column, defense_type)
+      defense = Defense.new(clicked_cell, defense_type)
 
       can_pay = can_pay_for? defense.cost
-      can_build = can_build_at?(clicked_row, clicked_column)
+      can_build = can_build_at? defense.cell
 
       if can_pay and can_build
-        build(defense, clicked_row, clicked_column)
-        pay(defense.cost)
+        build defense
+        pay defense.cost
         AudioHelper.play_sound :defense_built
       else
         AudioHelper.play_sound :cant_build
@@ -184,18 +166,48 @@ class Map
 
   private
 
+    def mouse_over
+      mouse_x = Game.current_window.mouse_x
+      mouse_y = Game.current_window.mouse_y
+      x1 = 0
+      x2 = MapHelper.get_x_for_column(@last_column) + MapHelper.tile_size
+      y1 = 0
+      y2 = MapHelper.get_y_for_row(@last_row) + MapHelper.tile_size
+      x_inside = (mouse_x >= x1 and mouse_x <= x2)
+      y_inside = (mouse_y >= y1 and mouse_y <= y2)
+
+      if x_inside and y_inside
+
+        clicked_column = MapHelper.get_column_for_x(mouse_x.to_i)
+        clicked_row = MapHelper.get_row_for_y(mouse_y.to_i)
+
+        unless clicked_column < 0 or clicked_column > @last_column or clicked_row < 0 or clicked_row > @last_row
+          return true
+        end
+      end
+      false
+    end
+
+    def clicked_cell
+      if mouse_over
+        clicked_column = MapHelper.get_column_for_x(Game.current_window.mouse_x.to_i)
+        clicked_row = MapHelper.get_row_for_y(Game.current_window.mouse_y.to_i)
+        Cell.new(self, clicked_row, clicked_column)
+      end
+    end
+
     def random_cell
-      [rand(0..@last_row), rand(0..@last_column)]
+      Cell.new(self, rand(0..@last_row), rand(0..@last_column))
     end
 
     def can_pay_for?(cost)
       cost <= @screen.money
     end
 
-    def can_build_at?(row, column)
-      at_blocked_cell = has_element_at?(row, column)
-      blocks_path = maze.block_all_paths?(row, column)
-      blocks_monster = block_any_monster_path?(row, column)
+    def can_build_at?(cell)
+      at_blocked_cell = has_element_at?(cell)
+      blocks_path = maze.block_all_paths?(cell)
+      blocks_monster = block_any_monster_path?(cell)
 
       DebugHelper.string("at_blocked_cell: #{at_blocked_cell.inspect}")
       DebugHelper.string("blocks_path: #{blocks_path.inspect}")
@@ -204,13 +216,14 @@ class Map
       not (at_blocked_cell or blocks_path or blocks_monster)
     end
 
-    def block_any_monster_path?(row, column)
+    def block_any_monster_path?(cell)
       blocks = false
       matrix = MapHelper.clone_matrix(maze.matrix)
-      matrix[row][column] = Maze::PATH_BLOCKED
+      matrix[cell.row][cell.column] = Maze::PATH_BLOCKED
       @monsters.each do |monster|
         monster_matrix = MapHelper.clone_matrix(matrix)
-        solver = maze.create_solver(monster_matrix, monster.current_row, monster.current_column)
+        start_cell = Cell.new(self, monster.current_row, monster.current_column)
+        solver = maze.create_solver(monster_matrix, start_cell)
         unless solver.has_solution?
           blocks = true
           break

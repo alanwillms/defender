@@ -21,8 +21,8 @@ class Defense < Building
   private
     def center
       half_tile = MapHelper.tile_size / 2
-      x = MapHelper.get_x_for_column(@column)
-      y = MapHelper.get_y_for_row(@row)
+      x = @cell.point.x
+      y = @cell.point.y
       [x + half_tile, y + half_tile]
     end
 end

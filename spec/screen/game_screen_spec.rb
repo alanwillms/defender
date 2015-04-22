@@ -1,15 +1,4 @@
 describe GameScreen do
-  building_settings = {
-    damage: 1,
-    range: 2,
-    max_range: 3,
-    speed: 4,
-    bullet_speed: 5,
-    life: 6,
-    shield: 7,
-    cost: 8
-  }
-
   let :font do
     font = instance_double("Gosu::Font")
     allow(font).to receive(:draw)
@@ -25,28 +14,8 @@ describe GameScreen do
     image
   end
 
-  let :game do
-    game = instance_double("Game", mouse_x: 0, mouse_y: 0)
-    allow(game).to receive(:draw_quad)
-    allow(game).to receive(:width).and_return(1024)
-    allow(game).to receive(:height).and_return(768)
-    game
-  end
-
   before :each do
-    allow(Game).to receive(:config).and_return({
-      tile_size: 32,
-      screen_padding: 0,
-      width: 1024,
-      height: 768,
-      buildings: {
-        defending_city: building_settings,
-        monster_spawner: building_settings,
-        wall: building_settings
-      },
-      waves: {}
-    })
-    allow(Game).to receive(:current_window).and_return(game)
+    allow(Game.current_window).to receive(:draw_quad)
     allow(SpriteHelper).to receive(:image).and_return(image)
     allow(SpriteHelper).to receive(:font).and_return(font)
     allow(AudioHelper).to receive(:play_song)
@@ -68,7 +37,7 @@ describe GameScreen do
     end
 
     it "adds buildings to the menu" do
-      expect_any_instance_of(Menu).to receive(:add_item).exactly(3).times
+      expect_any_instance_of(Menu).to receive(:add_item).at_least(:once)
       subject
     end
 

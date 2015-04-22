@@ -1,17 +1,6 @@
 describe Defense do
-  building_settings = {
-    damage: 10,
-    range: 4,
-    max_range: 4,
-    speed: 4,
-    bullet_speed: 4,
-    life: 4,
-    shield: 4,
-    cost: 4
-  }
-
   let :defense do
-    Defense.new(instance_double("Map"), 0, 0, :cannon)
+    Defense.new(Cell.new(instance_double("Map"), 0, 0), :cannon)
   end
 
   let :monster do
@@ -21,7 +10,6 @@ describe Defense do
   end
 
   before :each do
-    allow(Game).to receive(:config).and_return({buildings: {cannon: building_settings}})
     allow(MapHelper).to receive(:tile_size).and_return(32)
     allow(MapHelper).to receive(:fix_z_for_row).and_return(0)
     allow(MapHelper).to receive(:get_x_for_column).and_return(0)
@@ -62,7 +50,7 @@ describe Defense do
     context "monster has more health points than damage suffered" do
       it "reduces monster health_points" do
         allow(monster).to receive(:health_points).and_return(30)
-        expect(monster).to receive(:health_points=).with(30 - building_settings[:damage])
+        expect(monster).to receive(:health_points=).with(30 - Game.config[:buildings][:cannon][:damage])
         defense.shoot! monster
       end
     end

@@ -10,23 +10,25 @@ class Maze
   PATH_GO_DOWN = :"↓"
   PATH_GO_LEFT = :"←"
 
-  attr_reader :matrix
+  attr_reader :matrix, :map
 
   def initialize(map)
     @map = map
     @matrix = create_matrix
   end
 
-  def cell_blocked?(row, column)
-    @matrix[row][column] == Maze::PATH_BLOCKED
+  def cell_blocked?(cell)
+    @matrix[cell.row][cell.column] == Maze::PATH_BLOCKED
   end
 
-  def block(row, column)
-    @matrix[row][column] = PATH_BLOCKED
+  def block(cell)
+    @matrix[cell.row][cell.column] = PATH_BLOCKED
   end
 
   # Check if ALL monster spawners are not blocked until the exit(s)
-  def block_all_paths?(current_row, current_column)
+  def block_all_paths?(cell)
+    current_row = cell.row
+    current_column = cell.column
     @map.monster_spawners.each do |monster_spawner|
       @map.defending_cities.each do |defending_city|
         matrix = MapHelper.clone_matrix(@matrix)
@@ -39,9 +41,9 @@ class Maze
         end
 
         matrix[current_row][current_column] = PATH_BLOCKED
-        matrix[defending_city.row][defending_city.column] = PATH_END
+        matrix[defending_city.cell.row][defending_city.cell.column] = PATH_END
 
-        unless create_solver(matrix, monster_spawner.row, monster_spawner.column).has_solution?
+        unless create_solver(matrix, monster_spawner.cell).has_solution?
           return true
         end
       end
@@ -49,7 +51,9 @@ class Maze
     return false
   end
 
-  def create_solver(matrix, start_row, start_column)
+  def create_solver(matrix, start_cell)
+    start_row = start_cell.row
+    start_column = start_cell.column
     MazeSolver.new(MapHelper.clone_matrix(matrix), start_row, start_column)
   end
 
@@ -57,7 +61,7 @@ class Maze
     def create_matrix
       matrix = MapHelper.create_matrix(@map.rows, @map.columns, PATH_OPEN)
       @map.defending_cities.each do |building|
-        matrix[building.row][building.column] = PATH_END
+        matrix[building.cell.row][building.cell.column] = PATH_END
       end
       matrix
     end

@@ -1,10 +1,8 @@
 class Building
-  attr_reader :row, :column, :cost, :type
+  attr_reader :cell, :cost, :type
 
-  def initialize(map, row, column, type = nil)
-    @map = map
-    @row = row
-    @column = column
+  def initialize(cell, type = nil)
+    @cell = cell
     @type = type || guess_type
     @attack = attributes[:damage]
     @range = attributes[:range]
@@ -26,11 +24,11 @@ class Building
     end
 
     def x
-      MapHelper.get_x_for_column(@column)
+      cell.point.x
     end
 
     def y
-      value = MapHelper.get_y_for_row(@row)
+      value = cell.point.y
       if image.height > MapHelper.tile_size
         value - (image.height - MapHelper.tile_size)
       elsif image.height < MapHelper.tile_size
@@ -41,7 +39,7 @@ class Building
     end
 
     def z
-      MapHelper.fix_z_for_row(ZOrder::Entity, @row)
+      MapHelper.fix_z_for_row(ZOrder::Entity, cell.row)
     end
 
     def guess_type

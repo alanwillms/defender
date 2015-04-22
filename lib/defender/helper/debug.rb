@@ -13,9 +13,8 @@ class DebugHelper
   end
 
   def self.string(value)
-    if Game.config[:environment] != :development
-      return
+    if Game.config[:environment] == :development
+      puts value
     end
-    puts value
   end
 end
