@@ -1,9 +1,9 @@
 describe DefendingCity do
   let :image do
-    image = instance_double("Gosu::Image")
-    allow(image).to receive(:draw)
-    allow(image).to receive(:width).and_return(32)
-    allow(image).to receive(:height).and_return(32)
+    image = instance_double("Image")
+    allow(image).to receive(:draw_resized)
+    allow(image).to receive(:resized_width).and_return(32)
+    allow(image).to receive(:resized_height).and_return(32)
     image
   end
 
@@ -42,7 +42,7 @@ describe DefendingCity do
   context "#draw" do
 
     it "calls parent method" do
-      expect(image).to receive(:draw)
+      expect(image).to receive(:draw_resized)
       defending_city.draw
     end
 

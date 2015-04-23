@@ -1,8 +1,8 @@
 describe Monster do
   let :image do
-    image = instance_double("Gosu::Image")
-    allow(image).to receive(:width).and_return(32)
-    allow(image).to receive(:height).and_return(32)
+    image = instance_double("Image")
+    allow(image).to receive(:resized_width).and_return(32)
+    allow(image).to receive(:resized_height).and_return(32)
     image
   end
 
@@ -69,6 +69,7 @@ describe Monster do
     end
 
     it "sets target x and y positions" do
+      monster.warp(Cell.new(map, 0, 0))
       monster.find_target
       expect(monster.target_x).to be(MapHelper.tile_size)
       expect(monster.target_y).to be(0)
@@ -165,14 +166,14 @@ describe Monster do
 
   context "#draw" do
     it "renders the image" do
-      expect(image).to receive(:draw_rot)
+      expect(image).to receive(:draw_rot_resized)
       monster.draw
     end
 
     it "renders a health bar" do
       health_bar = double('health_bar')
       allow(HealthBar).to receive(:new).and_return(health_bar)
-      expect(image).to receive(:draw_rot)
+      expect(image).to receive(:draw_rot_resized)
       expect(health_bar).to receive(:draw)
       monster.draw
     end

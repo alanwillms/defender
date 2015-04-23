@@ -17,6 +17,7 @@ class GameScreen < BaseScreen
   end
 
   def draw
+    draw_background
     @map.draw
     @menu.draw
     ToastHelper.draw
@@ -40,6 +41,7 @@ class GameScreen < BaseScreen
       @money = 300
       @map = Map.new(self, 16, 16)
       @menu = Menu.new(self, menu_width, inner_height, map_size + screen_padding, screen_padding)
+      @background_animation = Animation.new(:sea)
     end
 
     def set_buildings
@@ -60,6 +62,18 @@ class GameScreen < BaseScreen
     def set_menu_items
       Game.config[:buildings].keys.each do |building_type|
         @menu.add_item(building_type, -> { puts "clicked" })
+      end
+    end
+
+    def draw_background
+      horizontal_count = (Game.current_window.width / MapHelper.tile_size).ceil
+      vertical_count = (Game.current_window.height / MapHelper.tile_size).ceil
+      for row in 0..vertical_count do
+        for column in 0..horizontal_count do
+          x = column * MapHelper.tile_size
+          y = row * MapHelper.tile_size
+          @background_animation.draw(x, y, 0)
+        end
       end
     end
 end

@@ -1,8 +1,8 @@
 describe Building do
   let :image do
-    image = instance_double("Gosu::Image")
-    allow(image).to receive(:width).and_return(32)
-    allow(image).to receive(:height).and_return(32)
+    image = instance_double("Image")
+    allow(image).to receive(:resized_width).and_return(32)
+    allow(image).to receive(:resized_height).and_return(32)
     image
   end
 
@@ -31,21 +31,21 @@ describe Building do
 
   context "#draw" do
     it "renders the image" do
-      expect(image).to receive(:draw).with(0, 0, 0)
+      expect(image).to receive(:draw_resized).with(0, 0, 0)
       building.draw
     end
 
     it "starts lower if image is shorter than tile" do
       allow(MapHelper).to receive(:tile_size).and_return(32)
-      allow(image).to receive(:height).and_return(12)
-      expect(image).to receive(:draw).with(0, 20, 0)
+      allow(image).to receive(:resized_height).and_return(12)
+      expect(image).to receive(:draw_resized).with(0, 20, 0)
       building.draw
     end
 
     it "starts higher if image is taller than tile" do
       allow(MapHelper).to receive(:tile_size).and_return(32)
-      allow(image).to receive(:height).and_return(48)
-      expect(image).to receive(:draw).with(0, -16, 0)
+      allow(image).to receive(:resized_height).and_return(48)
+      expect(image).to receive(:draw_resized).with(0, -16, 0)
       building.draw
     end
   end

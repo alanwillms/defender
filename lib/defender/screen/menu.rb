@@ -61,7 +61,7 @@ class Menu
 
   private
     def increase_items_y
-      @items_y += 100
+      @items_y += 200
     end
 
     def increase_items_x

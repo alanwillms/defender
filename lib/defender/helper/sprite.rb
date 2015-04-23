@@ -4,11 +4,11 @@ class SpriteHelper
   @@tilesets = {}
 
   def self.image(identifier)
-    @@images[identifier] ||= Gosu::Image.new(
+    @@images[identifier] ||= Image.new(Gosu::Image.new(
       Game.current_window,
       Game.config[:images][identifier],
       true
-    )
+    ))
   end
 
   def self.font(identifier = :default, height = 20)
@@ -21,12 +21,12 @@ class SpriteHelper
   end
 
   def self.tiles(identifier)
-    @@tilesets[identifier] ||= Gosu::Image::load_tiles(
+    @@tilesets[identifier] ||= Image::load_tiles(
       Game.current_window,
-      Game.config[:sprites][identifier],
-      Game.config[:sprite_width],
-      Game.config[:sprite_height],
-      Game.config[:sprite_tileable]
+      Game.config[:sprites][identifier][:source],
+      Game.config[:sprites][identifier][:frame_width],
+      Game.config[:sprites][identifier][:frame_height],
+      tileable = true
     )
   end
 end

@@ -20,14 +20,14 @@ class MenuItem
     if @selected
       color = 0xff4caf50
       Game.current_window.draw_quad(
-        @x, @y, color,
-        @x + @active_image.width, @y, color,
-        @x, @y + @active_image.height, color,
-        @x + @active_image.width, @y + @active_image.height, color,
+        @x - 2, @y - 2, color,
+        @x + @active_image.resized_width + 2, @y - 2, color,
+        @x - 2, @y + @active_image.resized_height + 2, color,
+        @x + @active_image.resized_width + 2, @y + @active_image.resized_height + 2, color,
         @z
       )
     end
-    @active_image.draw(@x, @y, @z)
+    @active_image.draw_resized(@x, @y, @z)
   end
 
   def update
@@ -53,6 +53,6 @@ class MenuItem
       mx = Game.current_window.mouse_x
       my = Game.current_window.mouse_y
 
-      (mx >= @x and my >= @y) and (mx <= @x + @active_image.width) and (my <= @y + @active_image.height)
+      (mx >= @x and my >= @y) and (mx <= @x + @active_image.resized_width) and (my <= @y + @active_image.resized_height)
     end
 end

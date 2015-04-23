@@ -1,6 +1,4 @@
 class HealthBar
-  PADDING = 2
-  HEIGHT = 8
   BACKGROUND_COLOR = 0xff000000
   GOOD_HEALTH_COLOR = 0xff4caf50
   MEDIUM_HEALTH_COLOR = 0xffffeb3b
@@ -22,13 +20,13 @@ class HealthBar
     x1 = @x
     y1 = @y
     x4 = @x + width
-    y4 = @y + HEIGHT
+    y4 = @y + Game.config[:health_bar_height]
 
-    draw_bar(x1, y1, x4, y4, ZOrder::HealthBarBg, PADDING, BACKGROUND_COLOR)
+    draw_bar(x1, y1, x4, y4, ZOrder::HealthBarBg, Game.config[:health_bar_padding], BACKGROUND_COLOR)
 
     x4 = @x + (health_percent * width)
 
-    draw_bar(x1, y1, x4, y4, ZOrder::HealthBar, PADDING + 1, health_color)
+    draw_bar(x1, y1, x4, y4, ZOrder::HealthBar, Game.config[:health_bar_padding] + 1, health_color)
   end
 
   private

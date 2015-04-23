@@ -14,7 +14,7 @@ class Building
   end
 
   def draw
-    image.draw(x, y, z)
+    image.draw_resized(x, y, z)
   end
 
   private
@@ -29,10 +29,10 @@ class Building
 
     def y
       value = cell.point.y
-      if image.height > MapHelper.tile_size
-        value - (image.height - MapHelper.tile_size)
-      elsif image.height < MapHelper.tile_size
-        value + (MapHelper.tile_size - image.height)
+      if image.resized_height > MapHelper.tile_size
+        value - (image.resized_height - MapHelper.tile_size)
+      elsif image.resized_height < MapHelper.tile_size
+        value + (MapHelper.tile_size - image.resized_height)
       else
         value
       end

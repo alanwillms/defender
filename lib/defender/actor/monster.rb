@@ -13,7 +13,7 @@ class Monster
     @type = type
     @facing = SPRITE_RIGHT_POSITION
     @x = @y = @target_x = @target_y = @current_row = @current_column = 0
-    @speed = rand(attributes[:speed]..attributes[:max_speed]) / 5
+    @speed = (attributes[:speed] * MapHelper.tile_size) / Game.current_window.update_interval
     @health_points = @initial_health_points = attributes[:life]
     @attack = attributes[:damage]
     @shield = attributes[:shield]
@@ -52,8 +52,8 @@ class Monster
     identifier = 'monster_' + @type.to_s
     fixed_z = MapHelper.fix_z_for_row(ZOrder::Entity, @current_row)
     img = SpriteHelper.tiles(identifier.to_sym)[current_sprite]
-    img.draw_rot(@x, @y, fixed_z, 0, 0, 0.5)
-    HealthBar.new(@health_points, @initial_health_points, @x, @y - 16).draw
+    img.draw_rot_resized(@x, @y, fixed_z, 0, 0, 0.5)
+    HealthBar.new(@health_points, @initial_health_points, @x, @y).draw
   end
 
   def center

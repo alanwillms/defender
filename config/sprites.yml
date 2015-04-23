@@ -1,9 +1,60 @@
-:monster_weak_1: "media/images/weak_1.png"
-:monster_weak_2: "media/images/weak_2.png"
-:monster_quick_1: "media/images/quick_1.png"
-:monster_big_hp: "media/images/big_hp.png"
-:monster_big_shield: "media/images/big_shield.png"
-:monster_big_damage: "media/images/big_damage.png"
-:monster_quick_big_hp: "media/images/quick_big_hp.png"
-:monster_quick_2: "media/images/quick_2.png"
-:monster_big_hp_shield: "media/images/big_hp_shield.png"
+:monster_weak_1:
+  :source: "media/images/weak_1.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_weak_2:
+  :source: "media/images/weak_2.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_quick_1:
+  :source: "media/images/quick_1.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_big_hp:
+  :source: "media/images/big_hp.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_big_shield:
+  :source: "media/images/big_shield.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_big_damage:
+  :source: "media/images/big_damage.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_quick_big_hp:
+  :source: "media/images/quick_big_hp.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_quick_2:
+  :source: "media/images/quick_2.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:monster_big_hp_shield:
+  :source: "media/images/big_hp_shield.png"
+  :frames: 3
+  :animations: 4
+  :frame_width: 32
+  :frame_height: 48
+:sea:
+  :source: "media/images/water_sprite.png"
+  :frames: 6
+  :animations: 1
+  :frame_width: 32
+  :frame_height: 32

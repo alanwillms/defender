@@ -64,7 +64,7 @@ class Map
 
   def build_random_walls
     rand(1..(@rows*@columns/5)).times do
-      cell = random_cell
+      cell = Cell.random(self)
       if can_build_at?(cell)
         build(Building.new(cell, :wall))
       end
@@ -74,7 +74,7 @@ class Map
   def build(object)
     @buildings_map[object.cell.row][object.cell.column] = object
     unless object.is_a?(MonsterSpawner) or object.is_a?(DefendingCity)
-      maze.block(object.cell)
+      object.cell.block
     end
   end
 
@@ -92,7 +92,7 @@ class Map
         x = MapHelper.get_x_for_column(column)
         y = MapHelper.get_y_for_row(row)
 
-        SpriteHelper.image(:floor).draw(x, y, ZOrder::Background)
+        SpriteHelper.image(:floor).draw_resized(x, y, ZOrder::Background)
 
         unless @buildings_map[row][column].nil?
           @buildings_map[row][column].draw
@@ -115,7 +115,7 @@ class Map
           unspawn_monster monster
           AudioHelper.play_sound :monster_attack
           if defending_city.health_points == 0
-            @maze.block(defending_city.cell)
+            defending_city.cell.block
           end
         end
       end
@@ -194,39 +194,19 @@ class Map
       end
     end
 
-    def random_cell
-      Cell.new(self, rand(0..@last_row), rand(0..@last_column))
-    end
-
     def can_pay_for?(cost)
       cost <= @screen.money
     end
 
     def can_build_at?(cell)
       at_blocked_cell = has_element_at?(cell)
-      blocks_path = maze.block_all_paths?(cell)
-      blocks_monster = block_any_monster_path?(cell)
+      blocks_path = cell.would_block_any_path?
+      blocks_monster = cell.would_block_any_monster?
 
       DebugHelper.string("at_blocked_cell: #{at_blocked_cell.inspect}")
       DebugHelper.string("blocks_path: #{blocks_path.inspect}")
       DebugHelper.string("blocks_monster: #{blocks_monster.inspect}")
 
       not (at_blocked_cell or blocks_path or blocks_monster)
-    end
-
-    def block_any_monster_path?(cell)
-      blocks = false
-      matrix = MapHelper.clone_matrix(maze.matrix)
-      matrix[cell.row][cell.column] = Maze::PATH_BLOCKED
-      @monsters.each do |monster|
-        monster_matrix = MapHelper.clone_matrix(matrix)
-        start_cell = Cell.new(self, monster.current_row, monster.current_column)
-        solver = maze.create_solver(monster_matrix, start_cell)
-        unless solver.has_solution?
-          blocks = true
-          break
-        end
-      end
-      blocks
     end
 end

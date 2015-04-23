@@ -12,10 +12,10 @@ describe MenuItem do
   end
 
   let :image do
-    image = instance_double("Gosu::Image")
-    allow(image).to receive(:draw)
-    allow(image).to receive(:width).and_return(32)
-    allow(image).to receive(:height).and_return(32)
+    image = instance_double("Image")
+    allow(image).to receive(:draw_resized)
+    allow(image).to receive(:resized_width).and_return(32)
+    allow(image).to receive(:resized_height).and_return(32)
     image
   end
 
@@ -28,7 +28,7 @@ describe MenuItem do
     context "selected item" do
       it "draws highlighted" do
         expect(game).to receive(:draw_quad)
-        expect(image).to receive(:draw)
+        expect(image).to receive(:draw_resized)
         menu_item.selected = true
         menu_item.draw
       end
@@ -37,7 +37,7 @@ describe MenuItem do
     context "unselected item" do
       it "draws without  highlight" do
         expect(game).not_to receive(:draw_quad)
-        expect(image).to receive(:draw)
+        expect(image).to receive(:draw_resized)
         menu_item.selected = false
         menu_item.draw
       end
